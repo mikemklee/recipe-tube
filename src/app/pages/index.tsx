@@ -1,6 +1,5 @@
-'use client';
-
 import { useState } from 'react';
+import Head from 'next/head';
 import { Recipe, ApiError } from '@/types';
 import UrlInputForm from '@/components/UrlInputForm';
 import RecipeDisplay from '@/components/RecipeDisplay';
@@ -53,6 +52,12 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4 max-w-3xl">
+      <Head>
+        <title>YouTube Recipe Extractor</title>
+        <meta name="description" content="Extract structured recipes from YouTube videos" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       <main className="flex flex-col items-center space-y-6">
         <h1 className="text-3xl font-bold text-center mt-8 mb-6">
           YouTube Recipe Extractor 🍲🎬
