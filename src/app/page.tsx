@@ -50,7 +50,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
+    <div className="min-h-screen bg-cream">
       <div className="container mx-auto px-4 py-12 max-w-[40rem]">
         <motion.main 
           className="flex flex-col items-center"
@@ -58,9 +58,9 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="text-center mb-12">
+          <div className="mb-12">
             <motion.h1 
-              className="text-4xl md:text-5xl font-bold text-orange-800 mb-3"
+              className="text-3xl font-semibold text-black mb-3"
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               transition={{ 
@@ -72,9 +72,10 @@ export default function Home() {
             >
               YouTube Recipe Extractor
             </motion.h1>
-            <p className="text-lg text-orange-700 max-w-2xl mx-auto">
+            <p className="text-black mb-4">
               Transform cooking videos into beautifully formatted recipes with just one click
             </p>
+           
           </div>
 
           {isLoading && (
@@ -84,7 +85,7 @@ export default function Home() {
               animate={{ opacity: 1 }}
             >
               <LoadingSpinner />
-              <p className="mt-4 text-orange-700 font-medium">
+              <p className="mt-4 font-medium text-black">
                 Extracting recipe... this may take a moment
               </p>
             </motion.div>
@@ -92,19 +93,16 @@ export default function Home() {
 
           {error && (
             <motion.div 
-              className="w-full mt-6 p-6 bg-red-50 border border-red-200 text-red-700 rounded-xl shadow-md"
+              className="w-full mt-6 p-6 border border-red-200 text-black rounded-xl shadow-md bg-beige"
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
             >
               <div className="flex items-center mb-2">
-                <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"></path>
-                </svg>
                 <p className="font-bold text-lg">Error</p>
               </div>
               <p className="mb-2">{error}</p>
-              {url && <p className="text-sm mt-2 text-red-500">URL: {url}</p>}
+              {url && <p className="text-sm mt-2 text-black font-medium">URL: {url}</p>}
             </motion.div>
           )}
 
@@ -121,33 +119,23 @@ export default function Home() {
 
           {!recipe && !isLoading && !error && (
             <motion.div 
-              className="text-center p-8 bg-white rounded-xl shadow-xl w-full"
+              className=" p-8 rounded-xl shadow-xl w-full bg-beige"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              <svg className="w-16 h-16 mx-auto mb-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-              </svg>
-              
-              <p className="text-xl text-orange-800 font-medium mb-6">
-                Extract recipes from YouTube cooking videos
-              </p>
-              
+
+
               <div className="mb-6">
                 <UrlInputForm onSubmit={handleExtractRecipe} isLoading={isLoading} />
               </div>
-              
-              <p className="text-orange-600 text-sm mt-4">
+              <p className="text-black text-sm text-gray-700 border-l-2 pl-2 border-tan italic">
+                
                 Works best with videos that clearly demonstrate recipes step by step
               </p>
             </motion.div>
           )}
         </motion.main>
-
-        {/* <footer className="mt-16 text-center text-orange-600 text-sm">
-          <p>Built with ❤️ for cooking enthusiasts</p>
-        </footer> */}
       </div>
     </div>
   );

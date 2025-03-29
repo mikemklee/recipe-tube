@@ -3,6 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Color palette */
+  --color-cream: #F8EDE3;
+  --color-beige: #DFD3C3;
+  --color-tan: #D0B8A8;
+  --color-terracotta: #C5705D;
 }
 
 @theme inline {
@@ -10,6 +16,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-cream: var(--color-cream);
+  --color-beige: var(--color-beige);
+  --color-tan: var(--color-tan);
+  --color-terracotta: var(--color-terracotta);
 }
 
 @media (prefers-color-scheme: dark) {
