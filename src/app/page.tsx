@@ -134,7 +134,7 @@ const dummyRecipe: Recipe = {
 export default function Home() {
   const [recipe, setRecipe] = useState<Recipe | null>(dummyRecipe);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [url, setUrl] = useState<string>('');
 
   const handleExtractRecipe = async (youtubeUrl: string) => {
@@ -193,15 +193,7 @@ export default function Home() {
         </div>
 
 
-        {isLoading && (
-          <motion.div
-            className="my-12 flex flex-col items-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <LoadingSpinner />
-          </motion.div>
-        )}
+
 
         {error && (
           <motion.div
@@ -233,6 +225,16 @@ export default function Home() {
             transition={{ duration: 0.2 }}
           >
             <RecipeDisplay recipe={recipe} />
+          </motion.div>
+        )}
+
+        {isLoading && (
+          <motion.div
+            className="my-12 flex flex-col items-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <LoadingSpinner />
           </motion.div>
         )}
       </div>
