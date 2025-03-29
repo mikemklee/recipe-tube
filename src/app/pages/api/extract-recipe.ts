@@ -46,7 +46,7 @@ export default async function handler(
     // 4. Return Success Response
     return res.status(200).json(finalRecipe);
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`[API Error] Failed to extract recipe for ${url}:`, error);
 
     if (error instanceof TranscriptError) {

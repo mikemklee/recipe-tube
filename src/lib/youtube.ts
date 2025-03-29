@@ -29,16 +29,22 @@ export async function fetchTranscript(url: string): Promise<string> {
     console.log(`Successfully fetched transcript (length: ${fullTranscript.length})`);
     return fullTranscript;
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching YouTube transcript:', error);
-    // Improve error message based on potential library errors
-    if (error.message?.includes('disabled transcript') || error.message?.includes('No transcript found')) {
-       throw new TranscriptError('Transcripts are disabled for this video or could not be found.');
+
+    if (error instanceof Error) {
+      // Improve error message based on potential library errors
+      if (error.message.includes('disabled transcript') || error.message.includes('No transcript found')) {
+        throw new TranscriptError('Transcripts are disabled for this video or could not be found.');
+      }
+      if (error.message.includes('invalid video ID') || error.message.includes('No video id found')) {
+        throw new TranscriptError('Invalid YouTube URL or Video ID.');
+      }
+      // Generic error
+      throw new TranscriptError(`Failed to fetch transcript: ${error.message}`);
     }
-     if (error.message?.includes('invalid video ID') || error.message?.includes('No video id found')) {
-       throw new TranscriptError('Invalid YouTube URL or Video ID.');
-    }
-    // Generic error
-    throw new TranscriptError(`Failed to fetch transcript: ${error.message || 'Unknown error'}`);
+
+    // Handle cases where error is not an instance of Error
+    throw new TranscriptError('Failed to fetch transcript: Unknown error');
   }
 }

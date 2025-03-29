@@ -13,12 +13,12 @@ export async function POST(request: NextRequest) {
   try {
     // Parse request body
     const body = await request.json();
-    
+
     // Validate request body
     const validationResult = RequestBodySchema.safeParse(body);
     if (!validationResult.success) {
       return NextResponse.json(
-        { message: validationResult.error.errors[0]?.message ?? "Invalid request body." }, 
+        { message: validationResult.error.errors[0]?.message ?? "Invalid request body." },
         { status: 400 }
       );
     }
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     // 4. Return Success Response
     return NextResponse.json(finalRecipe);
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`[API Error] Failed to extract recipe:`, error);
 
     if (error instanceof TranscriptError) {

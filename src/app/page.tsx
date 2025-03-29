@@ -41,9 +41,12 @@ export default function Home() {
         throw new Error((data as ApiError).message || 'Received unexpected data format from API.');
       }
 
-    } catch (err: any) {
-      console.error('Extraction failed:', err);
-      setError(err.message || 'An unknown error occurred.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred.');
+      }
     } finally {
       setIsLoading(false);
     }

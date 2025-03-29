@@ -75,10 +75,8 @@ Extract the recipe based on the rules and provide the JSON output.
 `;
 
   try {
-    console.log('Sending transcript to Gemini for extraction...');
-    
-    // Configure the model - using Gemini 1.5 Pro for its capabilities
-    const model = genAI.getGenerativeModel({ 
+    // Configure the model
+    const model = genAI.getGenerativeModel({
       model: "gemini-2.5-pro-exp-03-25",
       safetySettings: [
         {
@@ -110,7 +108,7 @@ Extract the recipe based on the rules and provide the JSON output.
       systemPrompt,
       userPrompt
     ]);
-    
+
     const response = await result.response;
     const rawResponse = response.text();
 
@@ -118,9 +116,9 @@ Extract the recipe based on the rules and provide the JSON output.
       throw new AiProcessingError('AI returned an empty response.');
     }
 
-    console.log('Received raw response from Gemini.'); // Don't log rawResponse in production if it contains sensitive data
-
     // Parse the JSON response from the AI
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let extractedData: any;
     try {
       extractedData = JSON.parse(rawResponse);
@@ -147,7 +145,7 @@ Extract the recipe based on the rules and provide the JSON output.
     // We expect 'extractedData' to match the Omit<Recipe, 'sourceUrl' | 'videoTitle'> structure
     return extractedData as Omit<Recipe, 'sourceUrl' | 'videoTitle'>;
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error processing transcript with Gemini:', error);
     if (error instanceof SyntaxError) {
       throw new AiProcessingError(`AI returned invalid JSON: ${error.message}`);
@@ -156,6 +154,6 @@ Extract the recipe based on the rules and provide the JSON output.
       throw error; // Re-throw our custom error
     }
     // Handle potential Gemini API errors
-    throw new AiProcessingError(`AI processing failed: ${error.message || 'Unknown error'}`);
+    throw new AiProcessingError(`AI processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
