@@ -15,6 +15,8 @@ const UrlInputForm: React.FC<UrlInputFormProps> = ({ onSubmit, isLoading }) => {
     }
   };
 
+  const isDisabled = !url.trim() || isLoading;
+
   return (
     <form onSubmit={handleSubmit} className="w-full flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0">
       <div className="relative flex-grow">
@@ -30,14 +32,14 @@ const UrlInputForm: React.FC<UrlInputFormProps> = ({ onSubmit, isLoading }) => {
           onChange={(e) => setUrl(e.target.value)}
           placeholder="Paste a Youtube video URL here"
           required
-          className="w-full pl-10 pr-4 py-3 border-2 border-tan bg-white rounded-xl shadow-sm text-black focus:outline-none focus:ring-2 transition duration-200 ease-in-out text-sm"
+          className="w-full pl-10 pr-4 py-3 border-2 border-tan bg-white rounded-xl shadow-sm text-black focus:outline-none transition duration-200 ease-in-out text-sm"
           disabled={isLoading}
         />
       </div>
       <button
         type="submit"
-        className={`px-3 rounded-xl text-white font-semibold bg-terracotta text-sm transition duration-200 ease-in-out shadow-sm ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-        disabled={isLoading}
+        className={`px-3 rounded-xl text-white font-semibold bg-terracotta text-sm transition duration-200 ease-in-out shadow-sm ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'} ${isDisabled ? 'opacity-50' : ''}`}
+        disabled={isLoading || !url.trim()}
       >
         {isLoading ? 'Processing...' : 'Extract Recipe'}
       </button>
