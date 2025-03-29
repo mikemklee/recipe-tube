@@ -13,8 +13,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [url, setUrl] = useState<string>('');
 
-  console.log(recipe)
-
   const handleExtractRecipe = async (youtubeUrl: string) => {
     setIsLoading(true);
     setError(null);
@@ -37,8 +35,8 @@ export default function Home() {
       }
 
       if ('ingredients' in data && 'instructions' in data) {
-        console.log(data)
          setRecipe(data);
+         console.log(JSON.stringify(data, null, 2))
       } else {
          throw new Error((data as ApiError).message || 'Received unexpected data format from API.');
       }
@@ -53,7 +51,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
+      <div className="container mx-auto px-4 py-12 max-w-[40rem]">
         <motion.main 
           className="flex flex-col items-center"
           initial={{ opacity: 0, y: 20 }}
@@ -78,15 +76,6 @@ export default function Home() {
               Transform cooking videos into beautifully formatted recipes with just one click
             </p>
           </div>
-
-          <motion.div 
-            className="w-full bg-white rounded-xl shadow-xl p-6 mb-8"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <UrlInputForm onSubmit={handleExtractRecipe} isLoading={isLoading} />
-          </motion.div>
 
           {isLoading && (
             <motion.div 
@@ -132,7 +121,7 @@ export default function Home() {
 
           {!recipe && !isLoading && !error && (
             <motion.div 
-              className="text-center mt-12 p-8 bg-orange-100 rounded-xl max-w-2xl mx-auto"
+              className="text-center p-8 bg-white rounded-xl shadow-xl w-full"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
@@ -140,19 +129,25 @@ export default function Home() {
               <svg className="w-16 h-16 mx-auto mb-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
               </svg>
-              <p className="text-lg text-orange-800 font-medium">
-                Paste a YouTube cooking video URL above to extract the recipe
+              
+              <p className="text-xl text-orange-800 font-medium mb-6">
+                Extract recipes from YouTube cooking videos
               </p>
-              <p className="text-orange-600 mt-2">
+              
+              <div className="mb-6">
+                <UrlInputForm onSubmit={handleExtractRecipe} isLoading={isLoading} />
+              </div>
+              
+              <p className="text-orange-600 text-sm mt-4">
                 Works best with videos that clearly demonstrate recipes step by step
               </p>
             </motion.div>
           )}
         </motion.main>
 
-        <footer className="mt-16 text-center text-orange-600 text-sm">
+        {/* <footer className="mt-16 text-center text-orange-600 text-sm">
           <p>Built with ❤️ for cooking enthusiasts</p>
-        </footer>
+        </footer> */}
       </div>
     </div>
   );

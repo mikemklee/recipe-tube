@@ -16,26 +16,34 @@ const UrlInputForm: React.FC<UrlInputFormProps> = ({ onSubmit, isLoading }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-lg flex space-x-2">
-      <input
-        type="url"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        placeholder="Enter YouTube Video URL (e.g., https://www.youtube.com/watch?v=...)"
-        required
-        className="flex-grow px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
-        disabled={isLoading}
-      />
+    <form onSubmit={handleSubmit} className="w-full flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0">
+      <div className="relative flex-grow">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg className="h-5 w-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+          </svg>
+        </div>
+        <input
+          type="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Paste YouTube video URL here..."
+          required
+          className="w-full pl-10 pr-4 py-3 border-2 border-orange-200 rounded-xl shadow-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-200 ease-in-out"
+          disabled={isLoading}
+        />
+      </div>
       <button
         type="submit"
-        className={`px-6 py-2 rounded-md text-white font-semibold transition duration-150 ease-in-out ${
+        className={`px-6 py-3 rounded-xl text-white font-medium text-sm tracking-wide uppercase transition duration-200 ease-in-out shadow-sm ${
           isLoading
-            ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+            ? 'bg-orange-300 cursor-not-allowed'
+            : 'bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transform hover:scale-105'
         }`}
         disabled={isLoading}
       >
-        {isLoading ? 'Extracting...' : 'Extract Recipe'}
+        {isLoading ? 'Processing...' : 'Extract Recipe'}
       </button>
     </form>
   );
