@@ -28,15 +28,15 @@ const UrlInputForm: React.FC<UrlInputFormProps> = ({ onSubmit, isLoading }) => {
           type="url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="Paste YouTube video URL here..."
+          placeholder="Paste a Youtube video URL here"
           required
-          className="w-full pl-10 pr-4 py-3 border-2 border-tan bg-white rounded-xl shadow-sm text-black focus:outline-none focus:ring-2 transition duration-200 ease-in-out"
+          className="w-full pl-10 pr-4 py-3 border-2 border-tan bg-white rounded-xl shadow-sm text-black focus:outline-none focus:ring-2 transition duration-200 ease-in-out text-sm"
           disabled={isLoading}
         />
       </div>
       <button
         type="submit"
-        className={`px-6 py-3 rounded-xl text-white font-medium bg-terracotta text-sm tracking-wide uppercase transition duration-200 ease-in-out shadow-sm ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+        className={`px-3 rounded-xl text-white font-semibold bg-terracotta text-sm transition duration-200 ease-in-out shadow-sm ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
         disabled={isLoading}
       >
         {isLoading ? 'Processing...' : 'Extract Recipe'}

@@ -40,7 +40,6 @@ const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
         <ol className="list-decimal list-inside space-y-3 text-black">
           {recipe.instructions.map((inst) => (
             <li key={inst.step} className="pl-2">
-               <span className="font-medium">Step {inst.step}: </span>
                {inst.description}
             </li>
           ))}
