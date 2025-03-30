@@ -47,7 +47,7 @@ export async function extractRecipeFromTranscript(
   }
 
   console.log(
-    "Now processing transcript with Gemini AI...",
+    "Now processing transcript with AI...",
     transcript.substring(0, 100)
   );
 
