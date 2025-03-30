@@ -1,14 +1,18 @@
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
-import { Recipe } from '@/types'; // Adjust path as needed
+import {
+  GoogleGenerativeAI,
+  HarmCategory,
+  HarmBlockThreshold,
+} from "@google/generative-ai";
+import { Recipe } from "@/types";
+import { geminiRateLimiter } from "./rate-limiter";
 
 let genAIClient: GoogleGenerativeAI | null = null;
 export const getGeminiClient = () => {
   if (!process.env.GEMINI_API_KEY) {
-    throw new Error('GEMINI_API_KEY is not set in the environment variables.');
+    throw new Error("GEMINI_API_KEY is not set in the environment variables.");
   }
 
   if (genAIClient) return genAIClient;
-
 
   genAIClient = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   return genAIClient;
@@ -18,22 +22,29 @@ export const getGeminiClient = () => {
 export class AiProcessingError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'AiProcessingError';
+    this.name = "AiProcessingError";
   }
 }
 
-/**
- * Uses Google's Gemini model to extract a structured recipe from transcript text.
- * @param transcript - The video transcript text.
- * @param videoTitle - Optional video title for context.
- * @returns A structured Recipe object.
- * @throws {AiProcessingError} If the AI fails to process or extract the recipe.
- */
+// Add a new rate limit error class
+export class RateLimitError extends Error {
+  constructor() {
+    super("API rate limit exceeded. Please try again later.");
+    this.name = "RateLimitError";
+  }
+}
+
 export async function extractRecipeFromTranscript(
   transcript: string,
-  locale: 'en' | 'ko' = 'en',
-  videoTitle?: string,
-): Promise<Omit<Recipe, 'sourceUrl' | 'videoTitle'>> { // Return partial recipe, URL added later
+  locale: "en" | "ko" = "en",
+  videoTitle?: string
+): Promise<Omit<Recipe, "sourceUrl" | "videoTitle">> {
+  // Check rate limit before making API call
+  const rateLimitKey = "gemini-api";
+  if (geminiRateLimiter.isRateLimited(rateLimitKey)) {
+    throw new RateLimitError();
+  }
+
   const systemPrompt = `
 You are an expert recipe extraction assistant. Your task is to analyze the provided video transcript
 and extract the recipe details in a structured JSON format.
@@ -71,15 +82,18 @@ Follow these rules strictly:
 
 7.  If no clear recipe can be extracted from the transcript, return a JSON object with an error field: { "error": "Could not extract a recipe from the provided transcript." }
 8.  Do not include any introductory text, concluding remarks, or explanations outside the JSON object in your response. Just the JSON.
-9.  Importantly, respond in ${locale === 'ko' ? 'Korean' : 'English'}.
+9.  Importantly, respond in ${locale === "ko" ? "Korean" : "English"}.
 `;
 
   const userPrompt = `
-Video Title (optional context): ${videoTitle || 'N/A'}
+Video Title (optional context): ${videoTitle || "N/A"}
 
 Video Transcript:
 ---
-${transcript.substring(0, 15000)} // Limit transcript length if needed for the model's context window
+${transcript.substring(
+  0,
+  15000
+)} // Limit transcript length if needed for the model's context window
 ---
 
 Extract the recipe based on the rules and provide the JSON output.
@@ -113,20 +127,17 @@ Extract the recipe based on the rules and provide the JSON output.
         temperature: 0.2, // Lower temperature for more deterministic output
         topP: 0.8,
         topK: 40,
-      }
+      },
     });
 
     // Generate content with combined prompts
-    const result = await model.generateContent([
-      systemPrompt,
-      userPrompt
-    ]);
+    const result = await model.generateContent([systemPrompt, userPrompt]);
 
     const response = await result.response;
     const rawResponse = response.text();
 
     if (!rawResponse) {
-      throw new AiProcessingError('AI returned an empty response.');
+      throw new AiProcessingError("AI returned an empty response.");
     }
 
     // Parse the JSON response from the AI
@@ -141,7 +152,11 @@ Extract the recipe based on the rules and provide the JSON output.
       if (jsonMatch) {
         extractedData = JSON.parse(jsonMatch[0]);
       } else {
-        throw new AiProcessingError(`Failed to parse JSON from AI response: ${(parseError as Error).message}`);
+        throw new AiProcessingError(
+          `Failed to parse JSON from AI response: ${
+            (parseError as Error).message
+          }`
+        );
       }
     }
 
@@ -150,16 +165,21 @@ Extract the recipe based on the rules and provide the JSON output.
       throw new AiProcessingError(extractedData.error);
     }
 
-    if (!extractedData.title || !Array.isArray(extractedData.ingredients) || !Array.isArray(extractedData.instructions)) {
-      throw new AiProcessingError('AI response is missing required recipe fields (title, ingredients, instructions).');
+    if (
+      !extractedData.title ||
+      !Array.isArray(extractedData.ingredients) ||
+      !Array.isArray(extractedData.instructions)
+    ) {
+      throw new AiProcessingError(
+        "AI response is missing required recipe fields (title, ingredients, instructions)."
+      );
     }
 
     console.log(`Successfully extracted recipe: ${extractedData.title}`);
     // We expect 'extractedData' to match the Omit<Recipe, 'sourceUrl' | 'videoTitle'> structure
-    return extractedData as Omit<Recipe, 'sourceUrl' | 'videoTitle'>;
-
+    return extractedData as Omit<Recipe, "sourceUrl" | "videoTitle">;
   } catch (error: unknown) {
-    console.error('Error processing transcript with Gemini:', error);
+    console.error("Error processing transcript with Gemini:", error);
     if (error instanceof SyntaxError) {
       throw new AiProcessingError(`AI returned invalid JSON: ${error.message}`);
     }
@@ -167,6 +187,10 @@ Extract the recipe based on the rules and provide the JSON output.
       throw error; // Re-throw our custom error
     }
     // Handle potential Gemini API errors
-    throw new AiProcessingError(`AI processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new AiProcessingError(
+      `AI processing failed: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
   }
 }
