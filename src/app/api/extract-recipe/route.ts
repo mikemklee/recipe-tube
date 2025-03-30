@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { fetchTranscript, TranscriptError } from '@/lib/youtube';
+import { fetchTranscriptViaInnerTube, TranscriptError } from '@/lib/youtube';
 import {
   extractRecipeFromTranscript,
   AiProcessingError
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     const { url, locale } = validationResult.data;
 
     // 1. Fetch Transcript
-    const transcript = await fetchTranscript(url);
+    const transcript = await fetchTranscriptViaInnerTube(url);
 
     // 2. Extract Recipe using AI
     const extractedRecipeData = await extractRecipeFromTranscript(transcript, locale);

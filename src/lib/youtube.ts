@@ -1,4 +1,19 @@
 import { YoutubeTranscript } from 'youtube-transcript';
+import { Innertube } from 'youtubei.js/web';
+
+let innerTube: Innertube | null = null;
+export const initInnerTube = async () => {
+  if (innerTube) return innerTube;
+
+  const youtube = await Innertube.create({
+    lang: 'en',
+    location: 'US',
+    retrieve_player: false,
+  });
+
+  innerTube = youtube;
+  return innerTube;
+}
 
 // Basic error class for transcript fetching issues
 export class TranscriptError extends Error {
@@ -48,3 +63,31 @@ export async function fetchTranscript(url: string): Promise<string> {
     throw new TranscriptError('Failed to fetch transcript: Unknown error');
   }
 }
+
+
+export const fetchTranscriptViaInnerTube = async (url: string): Promise<string> => {
+  try {
+    // extract the video ID from the URL
+    const videoId = url.split('v=')[1]?.split('&')[0];
+    console.log(`Fetching transcript for video ID: ${videoId}`);
+
+    const youtube = await initInnerTube();
+    if (!youtube) {
+      throw new TranscriptError('Failed to initialize Innertube API client.');
+    }
+
+    const info = await youtube.getInfo(videoId);
+    const transcriptData = await info.getTranscript();
+
+    const segments = transcriptData.transcript.content?.body?.initial_segments ?? [];
+    if (segments.length === 0) {
+      throw new TranscriptError('No transcript segments found.');
+    }
+    console.log(`Successfully fetched transcript segments (count: ${segments.length})`);
+
+    return segments.map((segment) => segment.snippet.text || '').join(' ');
+  } catch (error) {
+    console.error('Error fetching transcript:', error);
+    throw error;
+  }
+};
