@@ -136,6 +136,8 @@ Extract the recipe based on the rules and provide the JSON output.
     const response = await result.response;
     const rawResponse = response.text();
 
+    console.log("Raw AI response:", rawResponse);
+
     if (!rawResponse) {
       throw new AiProcessingError("AI returned an empty response.");
     }
