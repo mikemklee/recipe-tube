@@ -13,7 +13,7 @@ const translations: Translations = {
   },
   ko: {
     "urlInput.placeholder": "유튜브 영상 URL을 여기에 붙여넣으세요",
-    "urlInput.button": "레시피 추출하기",
+    "urlInput.button": "레시피 뽑아내기",
     "urlInput.processing": "처리 중...",
     // Add other translations
   },

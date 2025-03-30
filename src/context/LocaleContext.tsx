@@ -28,17 +28,18 @@ const translations: Translations = {
     "app.madeBy": "Made by",
     "error.title": "Something went wrong!",
     "error.url": "URL:",
-    // Add more translations as needed
+    "app.loading": "Extracting recipe... This may take a moment.",
   },
   ko: {
     "app.title": "RecipeTube",
     "app.description.1":
-      "한 번의 클릭으로 요리 영상에서 깔끔하게 정리된 레시피를 추출하세요!",
+      "클릭 한번으로 유튜브 요리 영상에서 깔끔하게 정리된 레시피를 뽑아내세요!",
     "app.description.2":
       "레시피를 단계별로 명확하게 보여주는 영상에서 가장 잘 작동합니다.",
     "app.madeBy": "제작자",
     "error.title": "문제가 발생했습니다!",
     "error.url": "링크:",
+    "app.loading": "레시피 추출 중... 잠시만 기다려주세요.",
     // Add more translations as needed
   },
 };
