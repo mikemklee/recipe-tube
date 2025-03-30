@@ -6,7 +6,7 @@ import { Translations, useLocale } from "@/context/LocaleContext";
 // Add translations for this component
 const translations: Translations = {
   en: {
-    "urlInput.placeholder": "Paste YouTube video URL here",
+    "urlInput.placeholder": "Paste a YouTube recipe video URL here",
     "urlInput.button": "Extract Recipe",
     "urlInput.processing": "Processing...",
     // Add other translations
@@ -50,13 +50,13 @@ export default function UrlInputForm({
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder={t2("urlInput.placeholder")}
-        className="p-3 ring-2 ring-tan rounded-lg w-full focus:outline-none focus:ring-terracotta transition-all text-black text-sm"
+        className="p-3 ring-2 ring-terracotta rounded-lg w-full focus:outline-none focus:ring-terracotta transition-all text-black text-sm"
         required
       />
       <button
         type="submit"
         disabled={isLoading || !url.trim()}
-        className="bg-terracotta hover:brightness-90 text-white py-2 px-4 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-default disabled:hover:brightness-100 transition-all"
+        className="font-bold bg-terracotta hover:brightness-90 text-white py-2 px-4 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-default disabled:hover:brightness-100 transition-all"
       >
         {isLoading ? t2("urlInput.processing") : t2("urlInput.button")}
       </button>

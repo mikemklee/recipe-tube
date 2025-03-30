@@ -7,7 +7,7 @@ interface RecipeDisplayProps {
 
 const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
   return (
-    <div className="shadow-md rounded-lg p-6 border border-gray-200 bg-beige">
+    <div className="shadow-md rounded-lg p-6 bg-beige">
       <h2 className="text-xl font-bold mb-4 text-black">{recipe.title}</h2>
 
       {recipe.description && (
@@ -42,13 +42,16 @@ const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
         <ul className="list-disc list-inside space-y-1 text-black">
           {recipe.ingredients.map((ing, index) => (
             <li key={index} className="text-sm">
-              <span>{ing.name} </span>
+              <span className="">
+                {ing.name.charAt(0).toUpperCase() + ing.name.substring(1)}
+              </span>
               {ing.quantity && (
                 <span className="font-medium text-gray-600">
-                  {ing.quantity}{" "}
+                  {" "}
+                  {ing.quantity}
                 </span>
               )}
-              {ing.unit && <span className="text-gray-600">{ing.unit}</span>}
+              {ing.unit && <span className="text-gray-600"> {ing.unit}</span>}
               {ing.preparation && (
                 <span className="text-gray-600">, {ing.preparation}</span>
               )}

@@ -6,13 +6,14 @@ import UrlInputForm from "@/components/UrlInputForm";
 import RecipeDisplay from "@/components/RecipeDisplay";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { motion } from "framer-motion";
+import { MdBookmarks } from "react-icons/md";
+
 import { LocaleProvider, useLocale } from "@/context/LocaleContext";
-import { dummyRecipe } from "@/lib/dummyData";
 
 // Wrap the main content in this component to use the locale context
 function MainContent() {
   const { locale, setLocale, t } = useLocale();
-  const [recipe, setRecipe] = useState<Recipe | null>(dummyRecipe);
+  const [recipe, setRecipe] = useState<Recipe | null>();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
@@ -71,6 +72,7 @@ function MainContent() {
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-semibold text-black mb-3">
               {t("app.title")}
+              <MdBookmarks className="inline-block text-terracotta ml-2 mb-1" />
             </h1>
             <div className="flex justify-end mb-4">
               <button

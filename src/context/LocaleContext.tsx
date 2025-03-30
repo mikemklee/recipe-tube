@@ -20,7 +20,7 @@ export type Translations = {
 
 const translations: Translations = {
   en: {
-    "app.title": "Youtube recipe extractor",
+    "app.title": "RecipeTube",
     "app.description.1":
       "Extract nicely formatted recipes from cooking videos with a single click!",
     "app.description.2":
@@ -31,7 +31,7 @@ const translations: Translations = {
     // Add more translations as needed
   },
   ko: {
-    "app.title": "유튜브 레시피 추출기",
+    "app.title": "RecipeTube",
     "app.description.1":
       "한 번의 클릭으로 요리 영상에서 깔끔하게 정리된 레시피를 추출하세요!",
     "app.description.2":
