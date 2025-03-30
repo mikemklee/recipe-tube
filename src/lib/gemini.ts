@@ -18,7 +18,7 @@ export const getGeminiClient = () => {
   return genAIClient;
 };
 
-// Basic error class for AI processing issues
+// Error classes
 export class AiProcessingError extends Error {
   constructor(message: string) {
     super(message);
@@ -26,12 +26,65 @@ export class AiProcessingError extends Error {
   }
 }
 
-// Add a new rate limit error class
 export class RateLimitError extends Error {
   constructor() {
     super("API rate limit exceeded. Please try again later.");
     this.name = "RateLimitError";
   }
+}
+
+// Helper function to parse and validate the AI response
+function parseAiResponse(
+  rawResponse: string
+): Omit<Recipe, "sourceUrl" | "videoTitle"> {
+  if (!rawResponse) {
+    throw new AiProcessingError("AI returned an empty response.");
+  }
+
+  const rawResponsePreview = rawResponse.substring(0, 100);
+
+  let extractedData;
+  try {
+    // Try direct JSON parsing first
+    extractedData = JSON.parse(rawResponse);
+  } catch (error) {
+    console.warn("Failed to parse JSON directly:", error);
+
+    // If direct parsing fails, try to extract JSON from the text
+    const jsonMatch = rawResponse.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new AiProcessingError(
+        `No valid JSON found in response. Raw response begins with: ${rawResponsePreview}...`
+      );
+    }
+
+    try {
+      extractedData = JSON.parse(jsonMatch[0]);
+    } catch (extractionError) {
+      console.error("Failed to parse JSON from AI response:", extractionError);
+
+      throw new AiProcessingError(
+        `Failed to parse extracted JSON. Raw response begins with: ${rawResponsePreview}...`
+      );
+    }
+  }
+
+  // Validate the parsed data
+  if (extractedData.error) {
+    throw new AiProcessingError(extractedData.error);
+  }
+
+  if (
+    !extractedData.title ||
+    !Array.isArray(extractedData.ingredients) ||
+    !Array.isArray(extractedData.instructions)
+  ) {
+    throw new AiProcessingError(
+      "AI response is missing required recipe fields (title, ingredients, instructions)."
+    );
+  }
+
+  return extractedData;
 }
 
 export async function extractRecipeFromTranscript(
@@ -42,15 +95,10 @@ export async function extractRecipeFromTranscript(
   // Check rate limit before making API call
   const rateLimitKey = "gemini-api";
   if (geminiRateLimiter.isRateLimited(rateLimitKey)) {
-    console.warn("Rate limit exceeded");
     throw new RateLimitError();
   }
 
-  console.log(
-    "Now processing transcript with AI...",
-    transcript.substring(0, 100)
-  );
-
+  // Prepare prompts
   const systemPrompt = `
 You are an expert recipe extraction assistant. Your task is to analyze the provided video transcript
 and extract the recipe details in a structured JSON format.
@@ -88,8 +136,7 @@ Follow these rules strictly:
 
 7.  If no clear recipe can be extracted from the transcript, return a JSON object with an error field: { "error": "Could not extract a recipe from the provided transcript." }
 8.  Do not include any introductory text, concluding remarks, or explanations outside the JSON object in your response. Just the JSON.
-9.  Importantly, respond in ${locale === "ko" ? "Korean" : "English"}.
-`;
+9.  Importantly, respond in ${locale === "ko" ? "Korean" : "English"}.`;
 
   const userPrompt = `
 Video Title (optional context): ${videoTitle || "N/A"}
@@ -102,8 +149,7 @@ ${transcript.substring(
 )} // Limit transcript length if needed for the model's context window
 ---
 
-Extract the recipe based on the rules and provide the JSON output.
-`;
+Extract the recipe based on the rules and provide the JSON output.`;
 
   try {
     const genAI = getGeminiClient();
@@ -136,101 +182,23 @@ Extract the recipe based on the rules and provide the JSON output.
       },
     });
 
-    console.log("Sending request to Gemini API...");
+    // Make the API request
+    const result = await model.generateContent([systemPrompt, userPrompt]);
+    const response = await result.response;
+    const rawResponse = response.text();
 
-    // Generate content with combined prompts
-    try {
-      const result = await model.generateContent([systemPrompt, userPrompt]);
-      const response = await result.response;
-      const rawResponse = response.text();
+    // Parse and validate the response
+    const extractedData = parseAiResponse(rawResponse);
 
-      console.log(
-        "Raw AI response (first 200 chars):",
-        rawResponse.substring(0, 200)
-      );
-
-      if (!rawResponse) {
-        throw new AiProcessingError("AI returned an empty response.");
-      }
-
-      // Parse the JSON response from the AI
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let extractedData: any;
-      try {
-        // First try direct JSON parsing
-        extractedData = JSON.parse(rawResponse);
-      } catch (parseError) {
-        console.log(
-          "Failed direct JSON parsing, trying to extract JSON from text"
-        );
-
-        // If the response contains text surrounding JSON, try to extract JSON
-        const jsonMatch = rawResponse.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          try {
-            extractedData = JSON.parse(jsonMatch[0]);
-          } catch (nestedError) {
-            console.error("JSON extraction failed:", nestedError);
-            console.log("Raw content:", rawResponse);
-            throw new AiProcessingError(
-              `Failed to parse JSON from AI response. The raw response was: ${rawResponse.substring(
-                0,
-                100
-              )}...`
-            );
-          }
-        } else {
-          // If no JSON object found, log the raw response for debugging
-          console.error("No JSON object found in response");
-          console.log("Raw AI response:", rawResponse);
-          throw new AiProcessingError(
-            `Failed to parse JSON from AI response: ${
-              (parseError as Error).message
-            }. Raw response begins with: ${rawResponse.substring(0, 100)}...`
-          );
-        }
-      }
-
-      // Basic validation (can be improved with Zod)
-      if (extractedData.error) {
-        throw new AiProcessingError(extractedData.error);
-      }
-
-      if (
-        !extractedData.title ||
-        !Array.isArray(extractedData.ingredients) ||
-        !Array.isArray(extractedData.instructions)
-      ) {
-        throw new AiProcessingError(
-          "AI response is missing required recipe fields (title, ingredients, instructions)."
-        );
-      }
-
-      console.log(`Successfully extracted recipe: ${extractedData.title}`);
-      // We expect 'extractedData' to match the Omit<Recipe, 'sourceUrl' | 'videoTitle'> structure
-      return extractedData as Omit<Recipe, "sourceUrl" | "videoTitle">;
-    } catch (apiError) {
-      console.error("Gemini API error:", apiError);
-      throw new AiProcessingError(
-        `Gemini API error: ${
-          apiError instanceof Error ? apiError.message : "Unknown error"
-        }`
-      );
+    return extractedData;
+  } catch (error) {
+    // Handle specific error types
+    if (error instanceof RateLimitError || error instanceof AiProcessingError) {
+      throw error; // Just re-throw these custom errors
     }
-  } catch (error: unknown) {
-    console.error("Error processing transcript with Gemini:", error);
-    if (error instanceof SyntaxError) {
-      throw new AiProcessingError(`AI returned invalid JSON: ${error.message}`);
-    }
-    if (error instanceof AiProcessingError) {
-      throw error; // Re-throw our custom error
-    }
-    // Handle potential Gemini API errors
-    throw new AiProcessingError(
-      `AI processing failed: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`
-    );
+
+    // For all other errors, wrap in AiProcessingError with a clear message
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new AiProcessingError(`AI processing failed: ${errorMessage}`);
   }
 }
