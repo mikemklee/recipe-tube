@@ -80,7 +80,17 @@ export const fetchTranscriptViaInnerTube = async (
 ): Promise<string> => {
   try {
     // extract the video ID from the URL
-    const videoId = url.split("v=")[1]?.split("&")[0];
+    let videoId = url.split("v=")[1]?.split("&")[0];
+
+    if (!videoId && url.includes("shorts")) {
+      // try to extract the video ID from a shorts URL
+      videoId = url.split("/").pop() || "";
+    }
+
+    if (!videoId) {
+      throw new TranscriptError("Invalid YouTube URL or Video ID.");
+    }
+
     console.log(`Fetching transcript for video ID: ${videoId}`);
 
     const youtube = await initInnerTube();

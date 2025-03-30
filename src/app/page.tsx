@@ -83,7 +83,7 @@ function MainContent() {
               </button>
             </div>
           </div>
-          <p className="text-black text-sm text-gray-700 border-l-2 pl-2 border-tan italic mb-2 flex flex-col">
+          <div className="text-black text-sm text-gray-700 border-l-2 pl-2 border-tan italic mb-2 flex flex-col">
             <span>{t("app.description.1")}</span>
             <span>{t("app.description.2")}</span>
 
@@ -98,7 +98,7 @@ function MainContent() {
                 @mikemklee
               </a>
             </span>
-          </p>
+          </div>
         </div>
 
         {error && (
