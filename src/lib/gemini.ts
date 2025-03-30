@@ -42,8 +42,14 @@ export async function extractRecipeFromTranscript(
   // Check rate limit before making API call
   const rateLimitKey = "gemini-api";
   if (geminiRateLimiter.isRateLimited(rateLimitKey)) {
+    console.warn("Rate limit exceeded");
     throw new RateLimitError();
   }
+
+  console.log(
+    "Now processing transcript with Gemini AI...",
+    transcript.substring(0, 100)
+  );
 
   const systemPrompt = `
 You are an expert recipe extraction assistant. Your task is to analyze the provided video transcript
