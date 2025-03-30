@@ -1,9 +1,18 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
 import { Recipe } from '@/types'; // Adjust path as needed
 
-// Initialize Gemini client
-// Ensure GEMINI_API_KEY is set in your environment variables
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
+let genAIClient: GoogleGenerativeAI | null = null;
+export const getGeminiClient = () => {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error('GEMINI_API_KEY is not set in the environment variables.');
+  }
+
+  if (genAIClient) return genAIClient;
+
+
+  genAIClient = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  return genAIClient;
+};
 
 // Basic error class for AI processing issues
 export class AiProcessingError extends Error {
@@ -75,6 +84,8 @@ Extract the recipe based on the rules and provide the JSON output.
 `;
 
   try {
+    const genAI = getGeminiClient();
+
     // Configure the model
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-pro-exp-03-25",

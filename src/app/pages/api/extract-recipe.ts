@@ -31,6 +31,7 @@ export default async function handler(
   try {
     // 1. Fetch Transcript
     const transcript = await fetchTranscript(url);
+    console.log(`[API] Transcript fetched successfully for ${url}:`, transcript.length);
 
     // 2. Extract Recipe using AI
     // We pass the transcript and optionally the URL or fetched video title for context
