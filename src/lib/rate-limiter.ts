@@ -1,45 +1,41 @@
-interface RateLimitEntry {
-  count: number;
+interface RequestTimestamp {
   timestamp: number;
 }
 
-class RateLimiter {
-  private cache: Map<string, RateLimitEntry> = new Map();
+export class RateLimiter {
+  private requestHistory: Map<string, RequestTimestamp[]> = new Map();
   private readonly maxRequests: number;
-  private readonly timeWindowMs: number;
+  private readonly windowMs: number;
 
-  constructor(maxRequests: number, timeWindowMs: number) {
+  constructor(maxRequests: number, windowMs: number) {
     this.maxRequests = maxRequests;
-    this.timeWindowMs = timeWindowMs;
+    this.windowMs = windowMs;
   }
 
   isRateLimited(key: string): boolean {
     const now = Date.now();
-    const entry = this.cache.get(key);
+    const windowStart = now - this.windowMs;
 
-    if (!entry) {
-      // First request
-      this.cache.set(key, { count: 1, timestamp: now });
-      return false;
+    // Get existing timestamps or create a new array
+    const timestamps = this.requestHistory.get(key) || [];
+
+    // Filter out timestamps older than the window
+    const recentTimestamps = timestamps.filter(
+      (entry) => entry.timestamp > windowStart
+    );
+
+    // Check if we're at the limit
+    if (recentTimestamps.length >= this.maxRequests) {
+      return true;
     }
 
-    // Check if the time window has passed
-    if (now - entry.timestamp > this.timeWindowMs) {
-      // Reset the counter
-      this.cache.set(key, { count: 1, timestamp: now });
-      return false;
-    }
+    // Add the current request timestamp
+    recentTimestamps.push({ timestamp: now });
 
-    // Increment the counter if within the window
-    if (entry.count < this.maxRequests) {
-      this.cache.set(key, {
-        count: entry.count + 1,
-        timestamp: entry.timestamp,
-      });
-      return false;
-    }
+    // Update the history
+    this.requestHistory.set(key, recentTimestamps);
 
-    return true;
+    return false;
   }
 }
 
