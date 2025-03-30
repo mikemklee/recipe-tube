@@ -55,6 +55,7 @@ function MainContent() {
         );
       }
     } catch (err: unknown) {
+      console.error(err);
       if (err instanceof Error) {
         setError(err.message);
       } else {

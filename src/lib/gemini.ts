@@ -136,56 +136,88 @@ Extract the recipe based on the rules and provide the JSON output.
       },
     });
 
+    console.log("Sending request to Gemini API...");
+
     // Generate content with combined prompts
-    const result = await model.generateContent([systemPrompt, userPrompt]);
-
-    const response = await result.response;
-    const rawResponse = response.text();
-
-    console.log("Raw AI response:", rawResponse);
-
-    if (!rawResponse) {
-      throw new AiProcessingError("AI returned an empty response.");
-    }
-
-    // Parse the JSON response from the AI
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let extractedData: any;
     try {
-      extractedData = JSON.parse(rawResponse);
-    } catch (parseError) {
-      // If the response contains text surrounding JSON, try to extract JSON
-      const jsonMatch = rawResponse.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        extractedData = JSON.parse(jsonMatch[0]);
-      } else {
+      const result = await model.generateContent([systemPrompt, userPrompt]);
+      const response = await result.response;
+      const rawResponse = response.text();
+
+      console.log(
+        "Raw AI response (first 200 chars):",
+        rawResponse.substring(0, 200)
+      );
+
+      if (!rawResponse) {
+        throw new AiProcessingError("AI returned an empty response.");
+      }
+
+      // Parse the JSON response from the AI
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let extractedData: any;
+      try {
+        // First try direct JSON parsing
+        extractedData = JSON.parse(rawResponse);
+      } catch (parseError) {
+        console.log(
+          "Failed direct JSON parsing, trying to extract JSON from text"
+        );
+
+        // If the response contains text surrounding JSON, try to extract JSON
+        const jsonMatch = rawResponse.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          try {
+            extractedData = JSON.parse(jsonMatch[0]);
+          } catch (nestedError) {
+            console.error("JSON extraction failed:", nestedError);
+            console.log("Raw content:", rawResponse);
+            throw new AiProcessingError(
+              `Failed to parse JSON from AI response. The raw response was: ${rawResponse.substring(
+                0,
+                100
+              )}...`
+            );
+          }
+        } else {
+          // If no JSON object found, log the raw response for debugging
+          console.error("No JSON object found in response");
+          console.log("Raw AI response:", rawResponse);
+          throw new AiProcessingError(
+            `Failed to parse JSON from AI response: ${
+              (parseError as Error).message
+            }. Raw response begins with: ${rawResponse.substring(0, 100)}...`
+          );
+        }
+      }
+
+      // Basic validation (can be improved with Zod)
+      if (extractedData.error) {
+        throw new AiProcessingError(extractedData.error);
+      }
+
+      if (
+        !extractedData.title ||
+        !Array.isArray(extractedData.ingredients) ||
+        !Array.isArray(extractedData.instructions)
+      ) {
         throw new AiProcessingError(
-          `Failed to parse JSON from AI response: ${
-            (parseError as Error).message
-          }`
+          "AI response is missing required recipe fields (title, ingredients, instructions)."
         );
       }
-    }
 
-    // Basic validation (can be improved with Zod)
-    if (extractedData.error) {
-      throw new AiProcessingError(extractedData.error);
-    }
-
-    if (
-      !extractedData.title ||
-      !Array.isArray(extractedData.ingredients) ||
-      !Array.isArray(extractedData.instructions)
-    ) {
+      console.log(`Successfully extracted recipe: ${extractedData.title}`);
+      // We expect 'extractedData' to match the Omit<Recipe, 'sourceUrl' | 'videoTitle'> structure
+      return extractedData as Omit<Recipe, "sourceUrl" | "videoTitle">;
+    } catch (apiError) {
+      console.error("Gemini API error:", apiError);
       throw new AiProcessingError(
-        "AI response is missing required recipe fields (title, ingredients, instructions)."
+        `Gemini API error: ${
+          apiError instanceof Error ? apiError.message : "Unknown error"
+        }`
       );
     }
-
-    console.log(`Successfully extracted recipe: ${extractedData.title}`);
-    // We expect 'extractedData' to match the Omit<Recipe, 'sourceUrl' | 'videoTitle'> structure
-    return extractedData as Omit<Recipe, "sourceUrl" | "videoTitle">;
   } catch (error: unknown) {
     console.error("Error processing transcript with Gemini:", error);
     if (error instanceof SyntaxError) {
