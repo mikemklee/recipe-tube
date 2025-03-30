@@ -1,50 +1,62 @@
-import React, { useState } from 'react';
+'use client';
+
+import { useState } from 'react';
+import { Translations, useLocale } from '@/context/LocaleContext';
+
+// Add translations for this component
+const translations: Translations = {
+  en: {
+    'urlInput.placeholder': 'Paste YouTube video URL here',
+    'urlInput.button': 'Extract Recipe',
+    'urlInput.processing': 'Processing...',
+    // Add other translations
+  },
+  ko: {
+    'urlInput.placeholder': '유튜브 영상 URL을 여기에 붙여넣으세요',
+    'urlInput.button': '레시피 추출하기',
+    'urlInput.processing': '처리 중...',
+    // Add other translations
+  }
+};
 
 interface UrlInputFormProps {
   onSubmit: (url: string) => void;
   isLoading: boolean;
 }
 
-const UrlInputForm: React.FC<UrlInputFormProps> = ({ onSubmit, isLoading }) => {
+export default function UrlInputForm({ onSubmit, isLoading }: UrlInputFormProps) {
   const [url, setUrl] = useState('');
+  const { locale, t } = useLocale();
+
+  // Get component-specific translations
+  const t2 = (key: string): string => {
+    return translations[locale][key] || key;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (url.trim() && !isLoading) {
+    if (url.trim()) {
       onSubmit(url.trim());
     }
   };
 
-  const isDisabled = !url.trim() || isLoading;
-
   return (
-    <form onSubmit={handleSubmit} className="w-full flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0">
-      <div className="relative flex-grow">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <svg className="h-5 w-5 text-terracotta" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-          </svg>
-        </div>
-        <input
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="Paste a Youtube video URL here"
-          required
-          className="w-full pl-10 pr-4 py-3 border-2 border-tan bg-white rounded-xl shadow-sm text-black focus:outline-none transition duration-200 ease-in-out text-sm"
-          disabled={isLoading}
-        />
-      </div>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <input
+        type="url"
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+        placeholder={t2('urlInput.placeholder')}
+        className="p-3 ring-2 ring-tan rounded-lg w-full focus:outline-none focus:ring-terracotta transition-all text-black text-sm"
+        required
+      />
       <button
         type="submit"
-        className={`px-3 rounded-xl text-white font-semibold bg-terracotta text-sm transition duration-200 ease-in-out shadow-sm ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'} ${isDisabled ? 'opacity-50' : ''}`}
         disabled={isLoading || !url.trim()}
+        className="bg-terracotta hover:brightness-90 text-white py-2 px-4 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-default disabled:hover:brightness-100 transition-all"
       >
-        {isLoading ? 'Processing...' : 'Extract Recipe'}
+        {isLoading ? t2('urlInput.processing') : t2('urlInput.button')}
       </button>
     </form>
   );
-};
-
-export default UrlInputForm;
+}

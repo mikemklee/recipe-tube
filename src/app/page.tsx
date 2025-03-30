@@ -6,8 +6,11 @@ import UrlInputForm from '@/components/UrlInputForm';
 import RecipeDisplay from '@/components/RecipeDisplay';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { motion } from 'framer-motion';
+import { LocaleProvider, useLocale } from '@/context/LocaleContext';
 
-export default function Home() {
+// Wrap the main content in this component to use the locale context
+function MainContent() {
+  const { locale, setLocale, t } = useLocale();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -56,21 +59,30 @@ export default function Home() {
     <div className="min-h-screen bg-cream">
       <div className="container mx-auto px-4 py-12 max-w-[40rem]">
         <div className="mb-6">
-          <h1
-            className="text-3xl font-semibold text-black mb-3"
-          >
-            Youtube recipe extractor
-          </h1>
+          <div className='flex items-center justify-between'>
+
+            <h1 className="text-3xl font-semibold text-black mb-3">
+              {t('app.title')}
+            </h1>
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={() => setLocale(locale === 'en' ? 'ko' : 'en')}
+                className="px-2 py-1 text-sm bg-tan hover:bg-terracotta text-white rounded-md transition-colors flex items-center"
+              >
+                {locale === 'en' ? '한국어로' : 'To English'}
+              </button>
+            </div>
+          </div>
           <p className="text-black text-sm text-gray-700 border-l-2 pl-2 border-tan italic mb-2 flex flex-col">
             <span>
-              Extract nicely formatted recipes from cooking videos with a single click!
+              {t('app.description.1')}
             </span>
             <span>
-              Works best with videos that clearly demonstrate recipes step by step.
+              {t('app.description.2')}
             </span>
 
-            <span className="text-sm  mt-2 ">
-              Made by
+            <span className="text-sm mt-2">
+              {t('app.madeBy')}
               <a
                 href="https://github.com/mikemklee"
                 target="_blank"
@@ -90,9 +102,9 @@ export default function Home() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <p className="font-bold">Something went wrong!</p>
+            <p className="font-bold">{t('error.title')}</p>
             <p>{error}</p>
-            {url && <p className="text-sm font-medium">URL: {url}</p>}
+            {url && <p className="text-sm font-medium">{t('error.url')} {url}</p>}
           </motion.div>
         )}
 
@@ -125,9 +137,16 @@ export default function Home() {
             <LoadingSpinner />
           </motion.div>
         )}
-
       </div>
-
     </div>
+  );
+}
+
+// Main component that provides the locale context
+export default function Home() {
+  return (
+    <LocaleProvider>
+      <MainContent />
+    </LocaleProvider>
   );
 }
