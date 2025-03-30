@@ -1,11 +1,14 @@
 import React from "react";
 import { Recipe } from "@/types";
+import { useLocale } from "@/context/LocaleContext";
 
 interface RecipeDisplayProps {
   recipe: Recipe;
 }
 
 const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
+  const { t } = useLocale();
+
   return (
     <div className="shadow-md rounded-lg p-6 bg-beige">
       <h2 className="text-xl font-bold mb-4 text-black">{recipe.title}</h2>
@@ -17,28 +20,30 @@ const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm text-black border-b pb-4 border-tan">
         {recipe.prepTime && (
           <div>
-            <strong>Prep:</strong> {recipe.prepTime}
+            <strong>{t("recipe.prep")}:</strong> {recipe.prepTime}
           </div>
         )}
         {recipe.cookTime && (
           <div>
-            <strong>Cook:</strong> {recipe.cookTime}
+            <strong>{t("recipe.cook")}:</strong> {recipe.cookTime}
           </div>
         )}
         {recipe.totalTime && (
           <div>
-            <strong>Total:</strong> {recipe.totalTime}
+            <strong>{t("recipe.total")}:</strong> {recipe.totalTime}
           </div>
         )}
         {recipe.servings && (
           <div>
-            <strong>Servings:</strong> {recipe.servings}
+            <strong>{t("recipe.servings")}:</strong> {recipe.servings}
           </div>
         )}
       </div>
 
       <div className="mb-4 border-b pb-4 border-tan">
-        <h3 className="text-xl font-semibold mb-3 text-black">Ingredients</h3>
+        <h3 className="text-xl font-semibold mb-3 text-black">
+          {t("recipe.ingredients")}
+        </h3>
         <ul className="list-disc list-inside space-y-1 text-black">
           {recipe.ingredients.map((ing, index) => (
             <li key={index} className="text-sm">
@@ -61,7 +66,9 @@ const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
       </div>
 
       <div>
-        <h3 className="text-xl font-semibold mb-3 text-black">Instructions</h3>
+        <h3 className="text-xl font-semibold mb-3 text-black">
+          {t("recipe.instructions")}
+        </h3>
         <ol className="list-decimal list-inside space-y-3 text-black ">
           {recipe.instructions.map((inst) => (
             <li key={inst.step} className="pl-2 text-sm">
@@ -73,7 +80,7 @@ const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
 
       <div className="mt-6 pt-4 border-t border-tan text-sm text-black">
         <p>
-          Extracted from:{" "}
+          {t("recipe.extractedFrom")}:{" "}
           <a
             href={recipe.sourceUrl}
             target="_blank"
@@ -83,7 +90,11 @@ const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
             {recipe.sourceUrl}
           </a>
         </p>
-        {recipe.videoTitle && <p>Original Video Title: {recipe.videoTitle}</p>}
+        {recipe.videoTitle && (
+          <p>
+            {t("recipe.originalTitle")}: {recipe.videoTitle}
+          </p>
+        )}
       </div>
     </div>
   );

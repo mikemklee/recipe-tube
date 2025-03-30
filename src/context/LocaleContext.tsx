@@ -29,6 +29,14 @@ const translations: Translations = {
     "error.title": "Something went wrong!",
     "error.url": "URL:",
     "app.loading": "Extracting recipe... This may take a moment.",
+    "recipe.ingredients": "Ingredients",
+    "recipe.instructions": "Instructions",
+    "recipe.extractedFrom": "Extracted from",
+    "recipe.originalTitle": "Original Video",
+    "recipe.prep": "Prep",
+    "recipe.cook": "Cook",
+    "recipe.total": "Total",
+    "recipe.servings": "Servings",
   },
   ko: {
     "app.title": "RecipeTube",
@@ -40,7 +48,14 @@ const translations: Translations = {
     "error.title": "문제가 발생했습니다!",
     "error.url": "링크:",
     "app.loading": "레시피 추출 중... 잠시만 기다려주세요.",
-    // Add more translations as needed
+    "recipe.ingredients": "재료",
+    "recipe.instructions": "조리 방법",
+    "recipe.extractedFrom": "출처",
+    "recipe.originalTitle": "원본 비디오",
+    "recipe.prep": "준비 시간",
+    "recipe.cook": "조리 시간",
+    "recipe.total": "총 소요 시간",
+    "recipe.servings": "분량",
   },
 };
 
