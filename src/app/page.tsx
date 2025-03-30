@@ -28,7 +28,10 @@ function MainContent() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url: youtubeUrl }),
+        body: JSON.stringify({
+          url: youtubeUrl,
+          locale
+        }),
       });
 
       const data: Recipe | ApiError = await response.json();
@@ -67,7 +70,7 @@ function MainContent() {
             <div className="flex justify-end mb-4">
               <button
                 onClick={() => setLocale(locale === 'en' ? 'ko' : 'en')}
-                className="px-2 py-1 text-sm bg-tan hover:bg-terracotta text-white rounded-md transition-colors flex items-center"
+                className="px-2 py-1 text-sm bg-terracotta opacity-60 hover:opacity-100 text-white rounded-md transition-all flex items-center cursor-pointer"
               >
                 {locale === 'en' ? '한국어로' : 'To English'}
               </button>

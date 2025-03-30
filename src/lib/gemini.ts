@@ -31,7 +31,8 @@ export class AiProcessingError extends Error {
  */
 export async function extractRecipeFromTranscript(
   transcript: string,
-  videoTitle?: string
+  locale: 'en' | 'ko' = 'en',
+  videoTitle?: string,
 ): Promise<Omit<Recipe, 'sourceUrl' | 'videoTitle'>> { // Return partial recipe, URL added later
   const systemPrompt = `
 You are an expert recipe extraction assistant. Your task is to analyze the provided video transcript
@@ -70,6 +71,7 @@ Follow these rules strictly:
 
 7.  If no clear recipe can be extracted from the transcript, return a JSON object with an error field: { "error": "Could not extract a recipe from the provided transcript." }
 8.  Do not include any introductory text, concluding remarks, or explanations outside the JSON object in your response. Just the JSON.
+9.  Importantly, respond in ${locale === 'ko' ? 'Korean' : 'English'}.
 `;
 
   const userPrompt = `

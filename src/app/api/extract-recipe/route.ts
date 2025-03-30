@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { fetchTranscript, TranscriptError } from '@/lib/youtube';
-import { extractRecipeFromTranscript, AiProcessingError } from '@/lib/gemini';
+import {
+  extractRecipeFromTranscript,
+  AiProcessingError
+} from '@/lib/gemini';
 import { Recipe } from '@/types';
 
 // Define the expected request body shape using Zod
 const RequestBodySchema = z.object({
   url: z.string().url({ message: "Invalid YouTube URL provided." }),
+  locale: z.enum(['en', 'ko']).default('en')
 });
 
 export async function POST(request: NextRequest) {
@@ -23,13 +27,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { url } = validationResult.data;
+    const { url, locale } = validationResult.data;
 
     // 1. Fetch Transcript
     const transcript = await fetchTranscript(url);
 
     // 2. Extract Recipe using AI
-    const extractedRecipeData = await extractRecipeFromTranscript(transcript);
+    const extractedRecipeData = await extractRecipeFromTranscript(transcript, locale);
 
     // 3. Construct the final Recipe object
     const finalRecipe: Recipe = {
