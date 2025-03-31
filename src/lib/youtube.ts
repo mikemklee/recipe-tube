@@ -80,11 +80,19 @@ export const fetchTranscriptViaInnerTube = async (
 ): Promise<string> => {
   try {
     // extract the video ID from the URL
-    let videoId = url.split("v=")[1]?.split("&")[0];
+    let videoId: string | undefined;
 
-    if (!videoId && url.includes("shorts")) {
-      // try to extract the video ID from a shorts URL
-      videoId = url.split("/").pop() || "";
+    // Check for standard youtube.com links (v=VIDEO_ID)
+    if (url.includes("youtube.com") && url.includes("v=")) {
+      videoId = url.split("v=")[1]?.split(/[?&]/)[0];
+    }
+    // Check for youtu.be short links
+    else if (url.includes("youtu.be")) {
+      videoId = url.split("youtu.be/")[1]?.split(/[?&]/)[0];
+    }
+    // Check for shorts
+    else if (url.includes("shorts")) {
+      videoId = url.split("/shorts/")[1]?.split(/[?&]/)[0];
     }
 
     if (!videoId) {
