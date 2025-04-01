@@ -1,23 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Translations, useLocale } from "@/context/LocaleContext";
-
-// Add translations for this component
-const translations: Translations = {
-  en: {
-    "urlInput.placeholder": "Paste a YouTube recipe video URL here",
-    "urlInput.button": "Extract Recipe",
-    "urlInput.processing": "Processing...",
-    // Add other translations
-  },
-  ko: {
-    "urlInput.placeholder": "유튜브 영상 URL을 여기에 붙여넣으세요",
-    "urlInput.button": "레시피 뽑아내기",
-    "urlInput.processing": "처리 중...",
-    // Add other translations
-  },
-};
+import { useLocale } from "@/context/LocaleContext";
 
 interface UrlInputFormProps {
   onSubmit: (url: string) => void;
@@ -29,12 +13,7 @@ export default function UrlInputForm({
   isLoading,
 }: UrlInputFormProps) {
   const [url, setUrl] = useState("");
-  const { locale } = useLocale();
-
-  // Get component-specific translations
-  const t2 = (key: string): string => {
-    return translations[locale][key] || key;
-  };
+  const { t } = useLocale();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +28,7 @@ export default function UrlInputForm({
         type="url"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
-        placeholder={t2("urlInput.placeholder")}
+        placeholder={t("urlInput.placeholder")}
         className="p-3 ring-2 ring-terracotta rounded-lg w-full focus:outline-none focus:ring-terracotta transition-all text-black text-sm"
         required
       />
@@ -58,7 +37,7 @@ export default function UrlInputForm({
         disabled={isLoading || !url.trim()}
         className="font-bold bg-terracotta hover:brightness-90 text-white py-2 px-4 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-default disabled:hover:brightness-100 transition-all"
       >
-        {isLoading ? t2("urlInput.processing") : t2("urlInput.button")}
+        {isLoading ? t("urlInput.processing") : t("urlInput.button")}
       </button>
     </form>
   );

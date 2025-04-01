@@ -6,19 +6,24 @@ import {
 import { Recipe } from "@/types";
 import { geminiRateLimiter } from "./rate-limiter";
 
-let genAIClient: GoogleGenerativeAI | null = null;
-export const getGeminiClient = () => {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY is not set in the environment variables.");
+// Error classes
+export class NoApiKeyError extends Error {
+  constructor() {
+    super("No Gemini API key provided. Please enter your API key.");
+    this.name = "NoApiKeyError";
+  }
+}
+
+export const getGeminiClient = (apiKey?: string) => {
+  const key = apiKey || process.env.GEMINI_API_KEY;
+
+  if (!key) {
+    throw new NoApiKeyError();
   }
 
-  if (genAIClient) return genAIClient;
-
-  genAIClient = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  return genAIClient;
+  return new GoogleGenerativeAI(key);
 };
 
-// Error classes
 export class AiProcessingError extends Error {
   constructor(message: string) {
     super(message);
@@ -90,7 +95,8 @@ function parseAiResponse(
 export async function extractRecipeFromTranscript(
   transcript: string,
   locale: "en" | "ko" = "en",
-  videoTitle?: string
+  videoTitle?: string,
+  apiKey?: string
 ): Promise<Omit<Recipe, "sourceUrl" | "videoTitle">> {
   // Check rate limit before making API call
   const rateLimitKey = "gemini-api";
@@ -152,7 +158,7 @@ ${transcript.substring(
 Extract the recipe based on the rules and provide the JSON output.`;
 
   try {
-    const genAI = getGeminiClient();
+    const genAI = getGeminiClient(apiKey);
 
     // Configure the model
     const model = genAI.getGenerativeModel({
