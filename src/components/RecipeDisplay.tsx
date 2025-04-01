@@ -10,7 +10,7 @@ const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
   const { t } = useLocale();
 
   return (
-    <div className="shadow-md rounded-lg p-6 bg-beige">
+    <div className="shadow-xl rounded-lg p-6 border-2 border-tan">
       <h2 className="text-xl font-bold mb-4 text-black">{recipe.title}</h2>
 
       {recipe.description && (

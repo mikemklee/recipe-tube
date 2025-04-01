@@ -20,6 +20,7 @@ export const translations: Translations = {
     "recipe.total": "Total",
     "recipe.servings": "Servings",
     // Include translations from UrlInputForm
+    "urlInput.title": "Extract recipe",
     "urlInput.placeholder": "Paste a YouTube recipe video URL here",
     "urlInput.button": "Extract Recipe",
     "urlInput.processing": "Processing...",
@@ -31,7 +32,7 @@ export const translations: Translations = {
     "apiKey.saved": "Saved",
     "apiKey.clear": "Clear",
     "apiKey.securityNote":
-      "Your API key is stored locally and never sent to our servers.",
+      "Your API key is stored locally and never stored in our servers.",
   },
   ko: {
     "app.title": "RecipeTube",
@@ -52,6 +53,7 @@ export const translations: Translations = {
     "recipe.total": "총 소요 시간",
     "recipe.servings": "분량",
     // Include translations from UrlInputForm
+    "urlInput.title": "레시피 추출",
     "urlInput.placeholder": "유튜브 영상 URL을 여기에 붙여넣으세요",
     "urlInput.button": "레시피 뽑아내기",
     "urlInput.processing": "처리 중...",
@@ -63,6 +65,6 @@ export const translations: Translations = {
     "apiKey.saved": "저장됨",
     "apiKey.clear": "삭제",
     "apiKey.securityNote":
-      "API 키는 로컬에만 저장되며 서버로 전송되지 않습니다.",
+      "API 키는 브라우저에만 저장되며 서버에 기록이 남지 않습니다.",
   },
 };
