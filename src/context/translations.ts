@@ -15,8 +15,8 @@ export const translations: Translations = {
     "recipe.instructions": "Instructions",
     "recipe.extractedFrom": "Extracted from",
     "recipe.originalTitle": "Original Video",
-    "recipe.prep": "Prep",
-    "recipe.cook": "Cook",
+    "recipe.prep": "Prep time",
+    "recipe.cook": "Cooking time",
     "recipe.total": "Total",
     "recipe.servings": "Servings",
     // Include translations from UrlInputForm
