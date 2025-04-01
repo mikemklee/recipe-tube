@@ -22,7 +22,7 @@ export const translations: Translations = {
     // Include translations from UrlInputForm
     "urlInput.title": "Extract recipe",
     "urlInput.placeholder": "Paste a YouTube recipe video URL here",
-    "urlInput.button": "Extract Recipe",
+    "urlInput.button": "Go!",
     "urlInput.processing": "Processing...",
     "apiKey.title": "Gemini API Key",
     "apiKey.description":
@@ -55,7 +55,7 @@ export const translations: Translations = {
     // Include translations from UrlInputForm
     "urlInput.title": "레시피 추출",
     "urlInput.placeholder": "유튜브 영상 URL을 여기에 붙여넣으세요",
-    "urlInput.button": "레시피 뽑아내기",
+    "urlInput.button": "시작!",
     "urlInput.processing": "처리 중...",
     "apiKey.title": "Gemini API 키",
     "apiKey.description":

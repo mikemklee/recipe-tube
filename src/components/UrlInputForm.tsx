@@ -41,7 +41,7 @@ export default function UrlInputForm({
         <button
           type="submit"
           disabled={isLoading || !url.trim()}
-          className="w-36 font-bold bg-terracotta hover:brightness-90 text-white  px-3 py-2 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-default disabled:hover:brightness-100 transition-all ring-2 ring-terracotta"
+          className="w-28 font-bold bg-terracotta hover:brightness-90 text-white  px-3 py-2 rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-default disabled:hover:brightness-100 transition-all ring-2 ring-terracotta"
         >
           {isLoading ? t("urlInput.processing") : t("urlInput.button")}
         </button>

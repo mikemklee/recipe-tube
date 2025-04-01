@@ -96,7 +96,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
           ) : (
             <button
               onClick={handleClear}
-              className="w-36 font-bold hover:brightness-90 bg-neutral-500 text-white px-3 py-2 rounded-lg cursor-pointer transition-all ring-2 ring-neutral-500"
+              className="w-28 font-bold hover:brightness-90 bg-neutral-500 text-white px-3 py-2 rounded-lg cursor-pointer transition-all ring-2 ring-neutral-500"
             >
               {t("apiKey.clear")}
             </button>
