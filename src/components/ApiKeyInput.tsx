@@ -64,8 +64,16 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
   return (
     <div className="mb-6">
       <h3 className="text-md font-semibold text-black mb-2 flex items-center gap-2">
-        {t("apiKey.title")}
         <RiGeminiLine />
+        {t("apiKey.title")}
+        {!originalKey && (
+          <span className="inline-flex items-center relative mb-3 ml-[-0.2rem]">
+            <span className="flex h-2 w-2">
+              <span className="animate-ping absolute h-full w-full rounded-full bg-amber-500 opacity-75"></span>
+              <span className="relative rounded-full h-2 w-2 bg-amber-600"></span>
+            </span>
+          </span>
+        )}
       </h3>
       <p className="text-gray-600 text-sm mb-3">{t("apiKey.description")}</p>
 

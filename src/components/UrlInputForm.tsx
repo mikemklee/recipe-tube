@@ -26,8 +26,8 @@ export default function UrlInputForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <h3 className="text-md font-semibold text-black mb-2 flex items-center gap-2">
-        {t("urlInput.title")}
         <FaWandMagicSparkles />
+        {t("urlInput.title")}
       </h3>
       <div className="flex gap-4 items-stretch">
         <input
