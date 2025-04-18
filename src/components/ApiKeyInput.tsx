@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocale } from "@/context/LocaleContext";
 import { motion } from "framer-motion";
 import { RiGeminiLine, RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
@@ -22,19 +22,13 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   useEffect(() => {
-    // Load API key from localStorage on component mount
-    const storedKey = localStorage.getItem("geminiApiKey");
-    if (storedKey) {
-      setApiKey(storedKey);
-      setOriginalKey(storedKey);
-      setSaved(true);
-      setIsCollapsed(true);
-    }
-  }, []);
+    setApiKey(initialKey);
+    setOriginalKey(initialKey);
+    setSaved(!!initialKey);
+  }, [initialKey]);
 
   const handleSave = () => {
     if (apiKey.trim()) {
-      // Save to localStorage
       localStorage.setItem("geminiApiKey", apiKey);
       onSave(apiKey);
       setOriginalKey(apiKey);
@@ -52,7 +46,6 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
     onSave("");
   };
 
-  // Detect if user is editing the saved key
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setApiKey(newValue);
@@ -73,7 +66,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
       className="rounded-xl shadow-xl w-full border-2 border-tan p-6 mb-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ delay: 0.1 }} // Adjusted delay slightly
+      transition={{ delay: 0.1 }}
     >
       <div>
         <div

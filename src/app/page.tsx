@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Recipe, ApiError } from "@/types";
 import UrlInputForm from "@/components/UrlInputForm";
 import RecipeDisplay from "@/components/RecipeDisplay";
@@ -16,11 +16,14 @@ function MainContent() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
-  const [geminiApiKey, setGeminiApiKey] = useState<string | null>(null);
+  const [geminiApiKey, setGeminiApiKey] = useState<string | undefined>();
 
-  const handleApiKeySave = (apiKey: string) => {
-    setGeminiApiKey(apiKey);
-  };
+  useEffect(() => {
+    const storedKey = localStorage.getItem("geminiApiKey");
+    if (storedKey) {
+      setGeminiApiKey(storedKey);
+    }
+  }, []);
 
   const handleExtractRecipe = async (youtubeUrl: string) => {
     setIsLoading(true);
@@ -29,18 +32,15 @@ function MainContent() {
     setUrl(youtubeUrl);
 
     try {
-      setIsLoading(true);
-      setError(null);
-
       const response = await fetch("/api/extract-recipe", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          url: url,
+          url: youtubeUrl,
           locale,
-          apiKey: geminiApiKey, // Include the API key in the request
+          apiKey: geminiApiKey,
         }),
       });
 
@@ -55,7 +55,6 @@ function MainContent() {
 
       if ("ingredients" in data && "instructions" in data) {
         setRecipe(data);
-        console.log(JSON.stringify(data, null, 2));
       } else {
         throw new Error(
           (data as ApiError).message ||
@@ -64,11 +63,9 @@ function MainContent() {
       }
     } catch (error) {
       console.error(error);
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("An unknown error occurred.");
-      }
+      setError(
+        error instanceof Error ? error.message : "An unknown error occurred."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -128,7 +125,7 @@ function MainContent() {
             </motion.div>
           )}
 
-          <ApiKeyInput onSave={handleApiKeySave} />
+          <ApiKeyInput initialKey={geminiApiKey} onSave={setGeminiApiKey} />
 
           <UrlInputForm onSubmit={handleExtractRecipe} isLoading={isLoading} />
 
@@ -154,8 +151,6 @@ function MainContent() {
           )}
         </div>
       </div>
-
-      {/* Add the API Key Input */}
     </main>
   );
 }
