@@ -5,9 +5,9 @@ import UrlInputForm from "@/components/UrlInputForm";
 import RecipeDisplay from "@/components/RecipeDisplay";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ApiKeyInput from "@/components/ApiKeyInput";
-import SavedRecipesList from "@/components/SavedRecipesList";
+import SavedRecipesPanel from "@/components/SavedRecipesPanel";
 import { motion } from "framer-motion";
-import { MdBookmarks, MdExpandMore, MdExpandLess } from "react-icons/md";
+import { MdBookmarks } from "react-icons/md";
 import { generateId } from "@/lib/utils";
 import { LocaleProvider, useLocale } from "@/context/LocaleContext";
 
@@ -157,48 +157,13 @@ function MainContent() {
             </div>
           </div>
 
-          {/* Saved Recipes Toggle */}
-          {savedRecipes.length > 0 && (
-            <div className="mb-6">
-              <button
-                onClick={() => setShowSavedRecipes(!showSavedRecipes)}
-                className="flex items-center gap-1 px-3 py-2 bg-tan hover:bg-tan/80 text-black rounded-md text-sm transition-colors w-full"
-              >
-                <MdBookmarks size={18} className="text-terracotta" />
-                {showSavedRecipes
-                  ? t("savedRecipes.hide")
-                  : t("savedRecipes.toggle")}
-                {showSavedRecipes ? (
-                  <MdExpandLess size={18} />
-                ) : (
-                  <MdExpandMore size={18} />
-                )}
-                <span className="ml-auto bg-terracotta text-white text-xs px-2 py-0.5 rounded-full">
-                  {savedRecipes.length}
-                </span>
-              </button>
-            </div>
-          )}
-
-          {/* Saved Recipes List */}
-          {showSavedRecipes && savedRecipes.length > 0 && (
-            <motion.div
-              className="mb-6 p-4 bg-white/50 border border-tan rounded-lg"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h2 className="font-bold mb-3 text-black">
-                {t("savedRecipes.title")}
-              </h2>
-              <SavedRecipesList
-                savedRecipes={savedRecipes}
-                onRecipeSelect={handleSelectRecipe}
-                onRecipeDelete={handleDeleteRecipe}
-              />
-            </motion.div>
-          )}
+          <SavedRecipesPanel
+            savedRecipes={savedRecipes}
+            showSavedRecipes={showSavedRecipes}
+            setShowSavedRecipes={setShowSavedRecipes}
+            onRecipeSelect={handleSelectRecipe}
+            onRecipeDelete={handleDeleteRecipe}
+          />
 
           {error && (
             <motion.div
@@ -247,20 +212,6 @@ function MainContent() {
           )}
         </div>
       </div>
-
-      {/* Floating button fixed to the bottom of the screen */}
-      <motion.button
-        className="fixed bottom-6 right-6 bg-terracotta hover:bg-terracotta/90 text-white rounded-full shadow-lg flex items-center justify-center w-auto h-10 z-50 p-4 gap-2 text-sm"
-        onClick={() => setShowSavedRecipes(!showSavedRecipes)}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.2 }}
-      >
-        <MdBookmarks />
-        <span>Browse saved recipes</span>
-      </motion.button>
     </main>
   );
 }
