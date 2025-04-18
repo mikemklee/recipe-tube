@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Recipe, ApiError, SavedRecipe } from "@/types";
 import SavedRecipesPanel from "@/components/SavedRecipesPanel";
 import ExtractRecipePanel from "@/components/ExtractRecipePanel";
-import { motion } from "framer-motion";
 import { MdBookmarks } from "react-icons/md";
 import { generateId } from "@/lib/utils";
 import { FaWandMagicSparkles } from "react-icons/fa6";
@@ -170,14 +169,9 @@ function MainContent() {
             />
           )}
 
-          <motion.button
+          <button
             className="fixed bottom-6 right-6 bg-terracotta hover:bg-terracotta/90 text-white rounded-full shadow-lg flex items-center justify-center w-auto h-10 z-50 p-4 gap-2 text-sm cursor-pointer"
             onClick={() => setShowSavedRecipes(!showSavedRecipes)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.2 }}
           >
             {showSavedRecipes ? (
               <>
@@ -190,7 +184,7 @@ function MainContent() {
                 <span>{t("savedRecipes.show")}</span>
               </>
             )}
-          </motion.button>
+          </button>
         </div>
       </div>
     </main>

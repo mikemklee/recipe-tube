@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useLocale } from "@/context/LocaleContext";
-import { motion } from "framer-motion";
 import { RiGeminiLine, RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
 interface ApiKeyInputProps {
@@ -85,13 +84,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
       </div>
 
       {!isCollapsed && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.2 }}
-          className="mt-4"
-        >
+        <div className="mt-4">
           <p className="text-gray-600 text-sm mb-3">
             {t("apiKey.description")}
           </p>
@@ -125,7 +118,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
           <p className="text-xs text-gray-500 mt-3">
             {t("apiKey.securityNote")}
           </p>
-        </motion.div>
+        </div>
       )}
     </div>
   );

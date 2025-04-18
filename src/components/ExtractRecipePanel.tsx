@@ -1,6 +1,5 @@
 import React from "react";
 import { Recipe } from "@/types";
-import { motion } from "framer-motion";
 import RecipeDisplay from "./RecipeDisplay";
 import LoadingSpinner from "./LoadingSpinner";
 import UrlInputForm from "./UrlInputForm";
@@ -35,12 +34,7 @@ const ExtractRecipePanel: React.FC<ExtractRecipePanelProps> = ({
   return (
     <>
       {error && (
-        <motion.div
-          className="w-full mt-6 p-4 border-2 border-orange-300 rounded-xl shadow-md bg-orange-100 mb-8 text-orange-800 flex flex-col gap-2"
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.2 }}
-        >
+        <div className="w-full mt-6 p-4 border-2 border-orange-300 rounded-xl shadow-md bg-orange-100 mb-8 text-orange-800 flex flex-col gap-2">
           <p className="font-bold">{t("error.title")}</p>
           <p>{error}</p>
           {url && (
@@ -48,7 +42,7 @@ const ExtractRecipePanel: React.FC<ExtractRecipePanelProps> = ({
               {t("error.url")} {url}
             </p>
           )}
-        </motion.div>
+        </div>
       )}
 
       <ApiKeyInput initialKey={geminiApiKey} onSave={onApiKeySave} />
@@ -58,28 +52,19 @@ const ExtractRecipePanel: React.FC<ExtractRecipePanelProps> = ({
       <UrlInputForm onSubmit={onExtractRecipe} isLoading={isLoading} />
 
       {recipe && !isLoading && (
-        <motion.div
-          className="w-full mt-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2 }}
-        >
+        <div className="w-full mt-8">
           <RecipeDisplay
             recipe={recipe}
             onSaveRecipe={onSaveRecipe}
             isSaved={isRecipeSaved}
           />
-        </motion.div>
+        </div>
       )}
 
       {isLoading && (
-        <motion.div
-          className="my-12 flex flex-col items-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
+        <div className="my-12 flex flex-col items-center">
           <LoadingSpinner />
-        </motion.div>
+        </div>
       )}
     </>
   );
