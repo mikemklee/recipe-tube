@@ -154,7 +154,6 @@ function MainContent() {
           {showSavedRecipes ? (
             <SavedRecipesPanel
               savedRecipes={savedRecipes}
-              showSavedRecipes={showSavedRecipes}
               onRecipeDelete={handleDeleteRecipe}
             />
           ) : (
