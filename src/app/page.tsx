@@ -1,14 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Recipe, ApiError, SavedRecipe } from "@/types";
-import UrlInputForm from "@/components/UrlInputForm";
-import RecipeDisplay from "@/components/RecipeDisplay";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import ApiKeyInput from "@/components/ApiKeyInput";
 import SavedRecipesPanel from "@/components/SavedRecipesPanel";
+import ExtractRecipePanel from "@/components/ExtractRecipePanel";
 import { motion } from "framer-motion";
 import { MdBookmarks } from "react-icons/md";
 import { generateId } from "@/lib/utils";
+import { FaWandMagicSparkles } from "react-icons/fa6";
+
 import { LocaleProvider, useLocale } from "@/context/LocaleContext";
 
 function MainContent() {
@@ -27,7 +26,6 @@ function MainContent() {
       setGeminiApiKey(storedKey);
     }
 
-    // Load saved recipes from localStorage
     const storedRecipes = localStorage.getItem("savedRecipes");
     if (storedRecipes) {
       try {
@@ -38,7 +36,6 @@ function MainContent() {
     }
   }, []);
 
-  // Function to save the current recipe
   const handleSaveRecipe = () => {
     if (!recipe) return;
 
@@ -53,19 +50,16 @@ function MainContent() {
     localStorage.setItem("savedRecipes", JSON.stringify(updatedRecipes));
   };
 
-  // Function to delete a saved recipe
   const handleDeleteRecipe = (id: string) => {
     const updatedRecipes = savedRecipes.filter((recipe) => recipe.id !== id);
     setSavedRecipes(updatedRecipes);
     localStorage.setItem("savedRecipes", JSON.stringify(updatedRecipes));
   };
 
-  // Function to select a saved recipe
   const handleSelectRecipe = (savedRecipe: SavedRecipe) => {
     setRecipe(savedRecipe);
   };
 
-  // Check if the current recipe is saved
   const isCurrentRecipeSaved = (): boolean => {
     if (!recipe) return false;
     return savedRecipes.some(
@@ -157,78 +151,54 @@ function MainContent() {
             </div>
           </div>
 
-          {error && (
-            <motion.div
-              className="w-full mt-6 p-6 border-2 border-orange-300 rounded-xl shadow-md bg-orange-100 mb-8 text-orange-800 flex flex-col gap-2"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <p className="font-bold">{t("error.title")}</p>
-              <p>{error}</p>
-              {url && (
-                <p className="text-sm font-medium">
-                  {t("error.url")} {url}
-                </p>
-              )}
-            </motion.div>
+          {showSavedRecipes ? (
+            <SavedRecipesPanel
+              savedRecipes={savedRecipes}
+              showSavedRecipes={showSavedRecipes}
+              onRecipeSelect={handleSelectRecipe}
+              onRecipeDelete={handleDeleteRecipe}
+            />
+          ) : (
+            <ExtractRecipePanel
+              recipe={recipe}
+              error={error}
+              url={url}
+              isLoading={isLoading}
+              geminiApiKey={geminiApiKey}
+              onSaveRecipe={handleSaveRecipe}
+              onExtractRecipe={handleExtractRecipe}
+              onApiKeySave={setGeminiApiKey}
+              isRecipeSaved={isCurrentRecipeSaved()}
+            />
           )}
 
-          <ApiKeyInput initialKey={geminiApiKey} onSave={setGeminiApiKey} />
-
-          <UrlInputForm onSubmit={handleExtractRecipe} isLoading={isLoading} />
-
-          {recipe && !isLoading && (
-            <motion.div
-              className="w-full mt-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <RecipeDisplay
-                recipe={recipe}
-                onSaveRecipe={handleSaveRecipe}
-                isSaved={isCurrentRecipeSaved()}
-              />
-            </motion.div>
-          )}
-
-          {isLoading && (
-            <motion.div
-              className="my-12 flex flex-col items-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <LoadingSpinner />
-            </motion.div>
-          )}
-
-          <SavedRecipesPanel
-            savedRecipes={savedRecipes}
-            showSavedRecipes={showSavedRecipes}
-            onRecipeSelect={handleSelectRecipe}
-            onRecipeDelete={handleDeleteRecipe}
-          />
+          <motion.button
+            className="fixed bottom-6 right-6 bg-terracotta hover:bg-terracotta/90 text-white rounded-full shadow-lg flex items-center justify-center w-auto h-10 z-50 p-4 gap-2 text-sm cursor-pointer"
+            onClick={() => setShowSavedRecipes(!showSavedRecipes)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            {showSavedRecipes ? (
+              <>
+                <FaWandMagicSparkles />
+                <span>{t("savedRecipes.hide")}</span>
+              </>
+            ) : (
+              <>
+                <MdBookmarks />
+                <span>{t("savedRecipes.show")}</span>
+              </>
+            )}
+          </motion.button>
         </div>
       </div>
-
-      <motion.button
-        className="fixed bottom-6 right-6 bg-terracotta hover:bg-terracotta/90 text-white rounded-full shadow-lg flex items-center justify-center w-auto h-10 z-50 p-4 gap-2 text-sm md:hidden"
-        onClick={() => setShowSavedRecipes(!showSavedRecipes)}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.2 }}
-      >
-        <MdBookmarks />
-        <span>{t("savedRecipes.toggle")}</span>
-      </motion.button>
     </main>
   );
 }
 
-// Main component that provides the locale context
 export default function Home() {
   return (
     <LocaleProvider>

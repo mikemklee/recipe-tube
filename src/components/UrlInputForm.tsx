@@ -29,7 +29,7 @@ export default function UrlInputForm({
       className="rounded-xl shadow-xl w-full border-2 border-tan p-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ delay: 0.2 }} // Original delay kept here
+      transition={{ delay: 0.2 }}
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
         <h3 className="text-md font-semibold text-black mb-2 flex items-center gap-2">
