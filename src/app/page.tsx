@@ -247,6 +247,20 @@ function MainContent() {
           )}
         </div>
       </div>
+
+      {/* Floating button fixed to the bottom of the screen */}
+      <motion.button
+        className="fixed bottom-6 right-6 bg-terracotta hover:bg-terracotta/90 text-white rounded-full shadow-lg flex items-center justify-center w-auto h-10 z-50 p-4 gap-2 text-sm"
+        onClick={() => setShowSavedRecipes(!showSavedRecipes)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.2 }}
+      >
+        <MdBookmarks />
+        <span>Browse saved recipes</span>
+      </motion.button>
     </main>
   );
 }
