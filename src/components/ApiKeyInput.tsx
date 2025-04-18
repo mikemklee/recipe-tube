@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocale } from "@/context/LocaleContext";
 import { motion } from "framer-motion";
-import { RiGeminiLine } from "react-icons/ri";
+import { RiGeminiLine, RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
 
 interface ApiKeyInputProps {
   onSave: (apiKey: string) => void;
@@ -19,6 +19,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
   const [originalKey, setOriginalKey] = useState(initialKey);
   const [saved, setSaved] = useState(!!initialKey);
   const [isEditing, setIsEditing] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   useEffect(() => {
     // Load API key from localStorage on component mount
@@ -27,6 +28,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
       setApiKey(storedKey);
       setOriginalKey(storedKey);
       setSaved(true);
+      setIsCollapsed(true);
     }
   }, []);
 
@@ -61,7 +63,6 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
       setIsEditing(false);
     }
   };
-  const [isCollapsed, setIsCollapsed] = useState(!!originalKey); // Collapsed by default if API key exists
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -91,8 +92,8 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
               </span>
             )}
           </h3>
-          <span className="text-gray-600 transition-transform">
-            {isCollapsed ? "▼" : "▲"}
+          <span className="text-gray-600 text-xl">
+            {isCollapsed ? <RiArrowDownSLine /> : <RiArrowUpSLine />}
           </span>
         </div>
 
