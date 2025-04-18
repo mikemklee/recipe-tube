@@ -157,14 +157,6 @@ function MainContent() {
             </div>
           </div>
 
-          <SavedRecipesPanel
-            savedRecipes={savedRecipes}
-            showSavedRecipes={showSavedRecipes}
-            setShowSavedRecipes={setShowSavedRecipes}
-            onRecipeSelect={handleSelectRecipe}
-            onRecipeDelete={handleDeleteRecipe}
-          />
-
           {error && (
             <motion.div
               className="w-full mt-6 p-6 border-2 border-orange-300 rounded-xl shadow-md bg-orange-100 mb-8 text-orange-800 flex flex-col gap-2"
@@ -210,8 +202,28 @@ function MainContent() {
               <LoadingSpinner />
             </motion.div>
           )}
+
+          <SavedRecipesPanel
+            savedRecipes={savedRecipes}
+            showSavedRecipes={showSavedRecipes}
+            onRecipeSelect={handleSelectRecipe}
+            onRecipeDelete={handleDeleteRecipe}
+          />
         </div>
       </div>
+
+      <motion.button
+        className="fixed bottom-6 right-6 bg-terracotta hover:bg-terracotta/90 text-white rounded-full shadow-lg flex items-center justify-center w-auto h-10 z-50 p-4 gap-2 text-sm md:hidden"
+        onClick={() => setShowSavedRecipes(!showSavedRecipes)}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.2 }}
+      >
+        <MdBookmarks />
+        <span>{t("savedRecipes.toggle")}</span>
+      </motion.button>
     </main>
   );
 }
