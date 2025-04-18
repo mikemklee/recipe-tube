@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { MdBookmarks } from "react-icons/md";
 import { generateId } from "@/lib/utils";
 import { FaWandMagicSparkles } from "react-icons/fa6";
+import { RiGlobalLine } from "react-icons/ri";
 
 import { LocaleProvider, useLocale } from "@/context/LocaleContext";
 
@@ -123,8 +124,9 @@ function MainContent() {
               <div className="flex justify-end mb-4">
                 <button
                   onClick={() => setLocale(locale === "en" ? "ko" : "en")}
-                  className="px-2 py-1 text-sm bg-terracotta opacity-60 hover:opacity-100 text-white rounded-md transition-all flex items-center cursor-pointer"
+                  className="px-2 py-1 text-sm opacity-80 hover:opacity-100 text-terracotta transition-all flex items-center cursor-pointer"
                 >
+                  <RiGlobalLine className="mr-1" />
                   {locale === "en" ? "한국어로" : "To English"}
                 </button>
               </div>

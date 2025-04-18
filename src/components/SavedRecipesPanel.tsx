@@ -56,9 +56,9 @@ const SavedRecipesPanel: React.FC<SavedRecipesPanelProps> = ({
             </>
           ) : (
             <>
-              <h2 className="font-bold mb-3 text-black">
+              <h1 className="font-bold mb-3 text-black text-lg">
                 {t("savedRecipes.title")}
-              </h2>
+              </h1>
               <SavedRecipesList
                 savedRecipes={savedRecipes}
                 onRecipeSelect={handleRecipeSelect}
