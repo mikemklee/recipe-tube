@@ -22,6 +22,11 @@ export interface RecipeIngredient {
     sourceUrl: string; // Original YouTube URL
     videoTitle?: string; // Title fetched from YouTube (optional)
   }
+
+  export interface SavedRecipe extends Recipe {
+    id: string;
+    savedAt: string;
+  }
   
   export interface ApiError {
     message: string;

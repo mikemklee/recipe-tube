@@ -1,13 +1,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Recipe, ApiError } from "@/types";
+import { Recipe, ApiError, SavedRecipe } from "@/types";
 import UrlInputForm from "@/components/UrlInputForm";
 import RecipeDisplay from "@/components/RecipeDisplay";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ApiKeyInput from "@/components/ApiKeyInput";
+import SavedRecipesList from "@/components/SavedRecipesList";
 import { motion } from "framer-motion";
-import { MdBookmarks } from "react-icons/md";
-
+import { MdBookmarks, MdExpandMore, MdExpandLess } from "react-icons/md";
+import { generateId } from "@/lib/utils";
 import { LocaleProvider, useLocale } from "@/context/LocaleContext";
 
 function MainContent() {
@@ -17,13 +18,61 @@ function MainContent() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
   const [geminiApiKey, setGeminiApiKey] = useState<string | undefined>();
+  const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>([]);
+  const [showSavedRecipes, setShowSavedRecipes] = useState<boolean>(false);
 
   useEffect(() => {
     const storedKey = localStorage.getItem("geminiApiKey");
     if (storedKey) {
       setGeminiApiKey(storedKey);
     }
+
+    // Load saved recipes from localStorage
+    const storedRecipes = localStorage.getItem("savedRecipes");
+    if (storedRecipes) {
+      try {
+        setSavedRecipes(JSON.parse(storedRecipes));
+      } catch (e) {
+        console.error("Failed to parse saved recipes:", e);
+      }
+    }
   }, []);
+
+  // Function to save the current recipe
+  const handleSaveRecipe = () => {
+    if (!recipe) return;
+
+    const savedRecipe: SavedRecipe = {
+      ...recipe,
+      id: generateId(),
+      savedAt: new Date().toISOString(),
+    };
+
+    const updatedRecipes = [...savedRecipes, savedRecipe];
+    setSavedRecipes(updatedRecipes);
+    localStorage.setItem("savedRecipes", JSON.stringify(updatedRecipes));
+  };
+
+  // Function to delete a saved recipe
+  const handleDeleteRecipe = (id: string) => {
+    const updatedRecipes = savedRecipes.filter((recipe) => recipe.id !== id);
+    setSavedRecipes(updatedRecipes);
+    localStorage.setItem("savedRecipes", JSON.stringify(updatedRecipes));
+  };
+
+  // Function to select a saved recipe
+  const handleSelectRecipe = (savedRecipe: SavedRecipe) => {
+    setRecipe(savedRecipe);
+  };
+
+  // Check if the current recipe is saved
+  const isCurrentRecipeSaved = (): boolean => {
+    if (!recipe) return false;
+    return savedRecipes.some(
+      (saved) =>
+        saved.sourceUrl === recipe.sourceUrl && saved.title === recipe.title
+    );
+  };
 
   const handleExtractRecipe = async (youtubeUrl: string) => {
     setIsLoading(true);
@@ -108,6 +157,49 @@ function MainContent() {
             </div>
           </div>
 
+          {/* Saved Recipes Toggle */}
+          {savedRecipes.length > 0 && (
+            <div className="mb-6">
+              <button
+                onClick={() => setShowSavedRecipes(!showSavedRecipes)}
+                className="flex items-center gap-1 px-3 py-2 bg-tan hover:bg-tan/80 text-black rounded-md text-sm transition-colors w-full"
+              >
+                <MdBookmarks size={18} className="text-terracotta" />
+                {showSavedRecipes
+                  ? t("savedRecipes.hide")
+                  : t("savedRecipes.toggle")}
+                {showSavedRecipes ? (
+                  <MdExpandLess size={18} />
+                ) : (
+                  <MdExpandMore size={18} />
+                )}
+                <span className="ml-auto bg-terracotta text-white text-xs px-2 py-0.5 rounded-full">
+                  {savedRecipes.length}
+                </span>
+              </button>
+            </div>
+          )}
+
+          {/* Saved Recipes List */}
+          {showSavedRecipes && savedRecipes.length > 0 && (
+            <motion.div
+              className="mb-6 p-4 bg-white/50 border border-tan rounded-lg"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <h2 className="font-bold mb-3 text-black">
+                {t("savedRecipes.title")}
+              </h2>
+              <SavedRecipesList
+                savedRecipes={savedRecipes}
+                onRecipeSelect={handleSelectRecipe}
+                onRecipeDelete={handleDeleteRecipe}
+              />
+            </motion.div>
+          )}
+
           {error && (
             <motion.div
               className="w-full mt-6 p-6 border-2 border-orange-300 rounded-xl shadow-md bg-orange-100 mb-8 text-orange-800 flex flex-col gap-2"
@@ -136,7 +228,11 @@ function MainContent() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <RecipeDisplay recipe={recipe} />
+              <RecipeDisplay
+                recipe={recipe}
+                onSaveRecipe={handleSaveRecipe}
+                isSaved={isCurrentRecipeSaved()}
+              />
             </motion.div>
           )}
 

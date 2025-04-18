@@ -1,17 +1,39 @@
 import React from "react";
 import { Recipe } from "@/types";
 import { useLocale } from "@/context/LocaleContext";
+import { MdBookmarkAdd, MdBookmark } from "react-icons/md";
 
 interface RecipeDisplayProps {
   recipe: Recipe;
+  onSaveRecipe?: () => void;
+  isSaved?: boolean;
 }
 
-const RecipeDisplay: React.FC<RecipeDisplayProps> = ({ recipe }) => {
+const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
+  recipe,
+  onSaveRecipe,
+  isSaved = false,
+}) => {
   const { t } = useLocale();
 
   return (
     <div className="shadow-xl rounded-lg p-6 border-2 border-tan">
-      <h2 className="text-xl font-bold mb-4 text-black">{recipe.title}</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold text-black">{recipe.title}</h2>
+        {onSaveRecipe && (
+          <button
+            onClick={onSaveRecipe}
+            className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm transition-colors ${
+              isSaved
+                ? "bg-terracotta/10 text-terracotta"
+                : "bg-terracotta text-white hover:bg-terracotta/90"
+            }`}
+          >
+            {isSaved ? <MdBookmark size={18} /> : <MdBookmarkAdd size={18} />}
+            {isSaved ? t("recipe.savedButton") : t("recipe.saveButton")}
+          </button>
+        )}
+      </div>
 
       {recipe.description && (
         <p className="text-black text-sm mb-4">{recipe.description}</p>
