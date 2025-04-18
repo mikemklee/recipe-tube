@@ -128,21 +128,9 @@ function MainContent() {
             </motion.div>
           )}
 
-          <motion.div
-            className="rounded-xl shadow-xl w-full border-2 border-tan p-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <ApiKeyInput onSave={handleApiKeySave} />
+          <ApiKeyInput onSave={handleApiKeySave} />
 
-            <hr className="border-1 border-tan mb-4 opacity-50" />
-
-            <UrlInputForm
-              onSubmit={handleExtractRecipe}
-              isLoading={isLoading}
-            />
-          </motion.div>
+          <UrlInputForm onSubmit={handleExtractRecipe} isLoading={isLoading} />
 
           {recipe && !isLoading && (
             <motion.div
