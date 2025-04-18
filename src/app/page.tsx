@@ -56,10 +56,6 @@ function MainContent() {
     localStorage.setItem("savedRecipes", JSON.stringify(updatedRecipes));
   };
 
-  const handleSelectRecipe = (savedRecipe: SavedRecipe) => {
-    setRecipe(savedRecipe);
-  };
-
   const isCurrentRecipeSaved = (): boolean => {
     if (!recipe) return false;
     return savedRecipes.some(
@@ -155,7 +151,6 @@ function MainContent() {
             <SavedRecipesPanel
               savedRecipes={savedRecipes}
               showSavedRecipes={showSavedRecipes}
-              onRecipeSelect={handleSelectRecipe}
               onRecipeDelete={handleDeleteRecipe}
             />
           ) : (

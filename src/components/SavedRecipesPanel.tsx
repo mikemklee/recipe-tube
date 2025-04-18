@@ -1,27 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { SavedRecipe } from "@/types";
 import SavedRecipesList from "./SavedRecipesList";
+import RecipeDisplay from "./RecipeDisplay";
 import { motion } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
+import { MdArrowBack } from "react-icons/md";
 
 interface SavedRecipesPanelProps {
   savedRecipes: SavedRecipe[];
   showSavedRecipes: boolean;
-  onRecipeSelect: (recipe: SavedRecipe) => void;
   onRecipeDelete: (id: string) => void;
 }
 
 const SavedRecipesPanel: React.FC<SavedRecipesPanelProps> = ({
   savedRecipes,
   showSavedRecipes,
-  onRecipeSelect,
   onRecipeDelete,
 }) => {
   const { t } = useLocale();
+  const [selectedRecipe, setSelectedRecipe] = useState<SavedRecipe | null>(
+    null
+  );
 
   if (savedRecipes.length === 0) {
     return null;
   }
+
+  const handleRecipeSelect = (recipe: SavedRecipe) => {
+    setSelectedRecipe(recipe);
+  };
+
+  const handleBackToList = () => {
+    setSelectedRecipe(null);
+  };
 
   return (
     <>
@@ -33,14 +44,31 @@ const SavedRecipesPanel: React.FC<SavedRecipesPanelProps> = ({
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <h2 className="font-bold mb-3 text-black">
-            {t("savedRecipes.title")}
-          </h2>
-          <SavedRecipesList
-            savedRecipes={savedRecipes}
-            onRecipeSelect={onRecipeSelect}
-            onRecipeDelete={onRecipeDelete}
-          />
+          {selectedRecipe ? (
+            <>
+              <div className="mb-4">
+                <button
+                  onClick={handleBackToList}
+                  className="flex items-center gap-1 text-sm text-terracotta hover:text-terracotta/80"
+                >
+                  <MdArrowBack size={18} />
+                  {t("savedRecipes.backToList")}
+                </button>
+              </div>
+              <RecipeDisplay recipe={selectedRecipe} />
+            </>
+          ) : (
+            <>
+              <h2 className="font-bold mb-3 text-black">
+                {t("savedRecipes.title")}
+              </h2>
+              <SavedRecipesList
+                savedRecipes={savedRecipes}
+                onRecipeSelect={handleRecipeSelect}
+                onRecipeDelete={onRecipeDelete}
+              />
+            </>
+          )}
         </motion.div>
       )}
     </>
