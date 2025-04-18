@@ -149,6 +149,8 @@ function MainContent() {
             </div>
           </div>
 
+          <hr className="border-t-2 border-tan/30 my-2" />
+
           {showSavedRecipes ? (
             <SavedRecipesPanel
               savedRecipes={savedRecipes}

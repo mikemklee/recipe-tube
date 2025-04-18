@@ -63,7 +63,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
 
   return (
     <motion.div
-      className="rounded-xl shadow-xl w-full border-2 border-tan p-6 mb-4"
+      className=" w-full my-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.1 }}

@@ -24,7 +24,7 @@ const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
   };
 
   return (
-    <div className="shadow-xl rounded-lg p-6 border-2 border-tan">
+    <div className="shadow-xl rounded-lg p-4 border-2 border-tan">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-black">{recipe.title}</h2>
         {onSaveRecipe && (

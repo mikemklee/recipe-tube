@@ -26,7 +26,7 @@ export default function UrlInputForm({
 
   return (
     <motion.div
-      className="rounded-xl shadow-xl w-full border-2 border-tan p-6"
+      className="w-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.2 }}

@@ -36,7 +36,7 @@ const ExtractRecipePanel: React.FC<ExtractRecipePanelProps> = ({
     <>
       {error && (
         <motion.div
-          className="w-full mt-6 p-6 border-2 border-orange-300 rounded-xl shadow-md bg-orange-100 mb-8 text-orange-800 flex flex-col gap-2"
+          className="w-full mt-6 p-4 border-2 border-orange-300 rounded-xl shadow-md bg-orange-100 mb-8 text-orange-800 flex flex-col gap-2"
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2 }}
@@ -52,6 +52,8 @@ const ExtractRecipePanel: React.FC<ExtractRecipePanelProps> = ({
       )}
 
       <ApiKeyInput initialKey={geminiApiKey} onSave={onApiKeySave} />
+
+      <hr className="border-t-2 border-tan/30 my-4" />
 
       <UrlInputForm onSubmit={onExtractRecipe} isLoading={isLoading} />
 
