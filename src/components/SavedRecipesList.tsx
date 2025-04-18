@@ -1,8 +1,7 @@
 import React from "react";
 import { SavedRecipe } from "@/types";
 import { useLocale } from "@/context/LocaleContext";
-import { motion } from "framer-motion";
-import { MdDelete } from "react-icons/md";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { formatDate } from "@/lib/utils";
 
 interface SavedRecipesListProps {
@@ -29,35 +28,28 @@ const SavedRecipesList: React.FC<SavedRecipesListProps> = ({
   return (
     <div className="space-y-2">
       {savedRecipes.map((recipe) => (
-        <motion.div
+        <div
           key={recipe.id}
-          className="bg-white rounded-lg p-4 shadow-sm border border-tan hover:shadow-md transition-shadow cursor-pointer"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileHover={{ scale: 1.01 }}
+          className="flex justify-between items-center cursor-pointer border-l-2 border-tan/50 hover:border-tan/100 transition-all py-1 pl-2"
+          onClick={() => onRecipeSelect(recipe)}
         >
-          <div
-            className="flex justify-between items-center"
-            onClick={() => onRecipeSelect(recipe)}
-          >
-            <div className="flex-1">
-              <h3 className="font-medium text-terracotta">{recipe.title}</h3>
-              <p className="text-xs text-gray-500">
-                {t("savedRecipes.savedOn")}: {formatDate(recipe.savedAt)}
-              </p>
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onRecipeDelete(recipe.id);
-              }}
-              className="p-1 rounded-full hover:bg-red-50 text-gray-500 hover:text-red-500 transition-colors"
-              title={t("savedRecipes.delete")}
-            >
-              <MdDelete size={18} />
-            </button>
+          <div className="flex-1">
+            <h3 className="font-medium text-terracotta">{recipe.title}</h3>
+            <p className="text-xs text-gray-500">
+              {t("savedRecipes.savedOn")}: {formatDate(recipe.savedAt)}
+            </p>
           </div>
-        </motion.div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onRecipeDelete(recipe.id);
+            }}
+            className="p-2 hover:bg-tan/20 rounded-full text-gray-500/50 hover:text-terracotta transition-all cursor-pointer"
+            title={t("savedRecipes.delete")}
+          >
+            <RiDeleteBin6Line />
+          </button>
+        </div>
       ))}
     </div>
   );

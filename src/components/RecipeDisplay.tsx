@@ -16,13 +16,20 @@ const RecipeDisplay: React.FC<RecipeDisplayProps> = ({
 }) => {
   const { t } = useLocale();
 
+  const handleSave = () => {
+    if (isSaved) return;
+    if (onSaveRecipe) {
+      onSaveRecipe();
+    }
+  };
+
   return (
     <div className="shadow-xl rounded-lg p-6 border-2 border-tan">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-black">{recipe.title}</h2>
         {onSaveRecipe && (
           <button
-            onClick={onSaveRecipe}
+            onClick={handleSave}
             className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm transition-colors ${
               isSaved
                 ? "bg-terracotta/10 text-terracotta"

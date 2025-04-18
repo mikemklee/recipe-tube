@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { SavedRecipe } from "@/types";
 import SavedRecipesList from "./SavedRecipesList";
 import RecipeDisplay from "./RecipeDisplay";
-import { motion } from "framer-motion";
 import { useLocale } from "@/context/LocaleContext";
 import { MdArrowBack } from "react-icons/md";
 
@@ -37,25 +36,23 @@ const SavedRecipesPanel: React.FC<SavedRecipesPanelProps> = ({
   return (
     <>
       {showSavedRecipes && (
-        <motion.div
-          className="mb-6 p-4 bg-white/50 border border-tan rounded-lg"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.2 }}
-        >
+        <>
           {selectedRecipe ? (
             <>
               <div className="mb-4">
                 <button
                   onClick={handleBackToList}
-                  className="flex items-center gap-1 text-sm text-terracotta hover:text-terracotta/80"
+                  className="flex items-center gap-1 text-sm text-terracotta hover:text-terracotta/80 cursor-pointer"
                 >
-                  <MdArrowBack size={18} />
+                  <MdArrowBack />
                   {t("savedRecipes.backToList")}
                 </button>
               </div>
-              <RecipeDisplay recipe={selectedRecipe} />
+              <RecipeDisplay
+                recipe={selectedRecipe}
+                isSaved={true}
+                onSaveRecipe={() => {}}
+              />
             </>
           ) : (
             <>
@@ -69,7 +66,7 @@ const SavedRecipesPanel: React.FC<SavedRecipesPanelProps> = ({
               />
             </>
           )}
-        </motion.div>
+        </>
       )}
     </>
   );
