@@ -120,7 +120,6 @@ export const fetchTranscriptViaInnerTube = async (
 
     return segments.map((segment) => segment.snippet.text || "").join(" ");
   } catch (error) {
-    console.error("Error fetching transcript:", error);
-    throw error;
+    throw new TranscriptError(String(error));
   }
 };

@@ -21,7 +21,6 @@ interface ExtractRecipePanelProps {
 const ExtractRecipePanel: React.FC<ExtractRecipePanelProps> = ({
   recipe,
   error,
-  url,
   isLoading,
   geminiApiKey,
   onSaveRecipe,
@@ -34,14 +33,9 @@ const ExtractRecipePanel: React.FC<ExtractRecipePanelProps> = ({
   return (
     <>
       {error && (
-        <div className="w-full mt-6 p-4 border-2 border-orange-300 rounded-xl shadow-md bg-orange-100 mb-8 text-orange-800 flex flex-col gap-2">
+        <div className="w-full mt-6 p-3 text-sm border-2 border-orange-300 rounded-xl shadow-md bg-orange-100 mb-8 text-orange-800 flex flex-col gap-2">
           <p className="font-bold">{t("error.title")}</p>
-          <p>{error}</p>
-          {url && (
-            <p className="text-sm font-medium">
-              {t("error.url")} {url}
-            </p>
-          )}
+          <p className="text-sm">{error}</p>
         </div>
       )}
 
