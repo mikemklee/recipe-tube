@@ -19,7 +19,15 @@ export const translations: Translations = {
     "recipe.cook": "Cooking time",
     "recipe.total": "Total",
     "recipe.servings": "Servings",
-    // Include translations from UrlInputForm
+    "recipe.saveButton": "Save Recipe",
+    "recipe.savedButton": "Saved",
+    "savedRecipes.title": "Saved recipes",
+    "savedRecipes.noRecipes": "No saved recipes yet",
+    "savedRecipes.show": "Show saved recipes",
+    "savedRecipes.hide": "Extract Recipe",
+    "savedRecipes.savedOn": "Saved on",
+    "savedRecipes.delete": "Delete recipe",
+    "savedRecipes.backToList": "Saved recipes",
     "urlInput.title": "Extract recipe",
     "urlInput.placeholder": "Paste a YouTube recipe video URL here",
     "urlInput.button": "Go!",
@@ -33,13 +41,15 @@ export const translations: Translations = {
     "apiKey.clear": "Clear",
     "apiKey.securityNote":
       "Your API key is stored locally and never stored in our servers.",
+    "tabs.extract": "New recipe",
+    "tabs.saved": "Saved recipes",
   },
   ko: {
     "app.title": "RecipeTube",
     "app.description.1":
-      "클릭 한번으로 유튜브 요리 영상에서 깔끔하게 정리된 레시피를 뽑아내세요!",
+      "클릭 한번으로 유튜브 요리 영상에서 깔끔한 레시피를 바로 만들어 드려요!",
     "app.description.2":
-      "레시피를 단계별로 명확하게 보여주는 영상에서 가장 잘 작동합니다.",
+      "요리 과정이 자세히 나온 영상에서 더 좋은 결과를 얻을 수 있어요.",
     "app.madeBy": "제작자",
     "error.title": "문제가 발생했습니다!",
     "error.url": "링크:",
@@ -52,7 +62,15 @@ export const translations: Translations = {
     "recipe.cook": "조리 시간",
     "recipe.total": "총 소요 시간",
     "recipe.servings": "분량",
-    // Include translations from UrlInputForm
+    "recipe.saveButton": "레시피 저장",
+    "recipe.savedButton": "저장됨",
+    "savedRecipes.title": "저장된 레시피",
+    "savedRecipes.noRecipes": "저장된 레시피가 없습니다",
+    "savedRecipes.show": "저장된 레시피 보기",
+    "savedRecipes.hide": "레시피 추출하기",
+    "savedRecipes.savedOn": "저장 날짜",
+    "savedRecipes.delete": "레시피 삭제",
+    "savedRecipes.backToList": "저장된 레시피",
     "urlInput.title": "레시피 추출",
     "urlInput.placeholder": "유튜브 영상 URL을 여기에 붙여넣으세요",
     "urlInput.button": "시작!",
@@ -66,5 +84,7 @@ export const translations: Translations = {
     "apiKey.clear": "삭제",
     "apiKey.securityNote":
       "API 키는 브라우저에만 저장되며 서버에 기록이 남지 않습니다.",
+    "tabs.extract": "새로운 레시피",
+    "tabs.saved": "저장된 레시피",
   },
 };

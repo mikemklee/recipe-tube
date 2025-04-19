@@ -1,14 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Recipe, ApiError } from "@/types";
-import UrlInputForm from "@/components/UrlInputForm";
-import RecipeDisplay from "@/components/RecipeDisplay";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import ApiKeyInput from "@/components/ApiKeyInput";
-import { motion } from "framer-motion";
+import { Recipe, ApiError, SavedRecipe } from "@/types";
+import SavedRecipesPanel from "@/components/SavedRecipesPanel";
+import ExtractRecipePanel from "@/components/ExtractRecipePanel";
 import { MdBookmarks } from "react-icons/md";
+import { generateId } from "@/lib/utils";
+import { RiGlobalLine } from "react-icons/ri";
 
 import { LocaleProvider, useLocale } from "@/context/LocaleContext";
+
+enum Tab {
+  EXTRACT = "extract",
+  SAVED = "saved",
+}
 
 function MainContent() {
   const { locale, setLocale, t } = useLocale();
@@ -17,13 +21,53 @@ function MainContent() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
   const [geminiApiKey, setGeminiApiKey] = useState<string | undefined>();
+  const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>([]);
+
+  const [selectedTab, setSelectedTab] = useState<Tab>(Tab.EXTRACT);
 
   useEffect(() => {
     const storedKey = localStorage.getItem("geminiApiKey");
     if (storedKey) {
       setGeminiApiKey(storedKey);
     }
+
+    const storedRecipes = localStorage.getItem("savedRecipes");
+    if (storedRecipes) {
+      try {
+        setSavedRecipes(JSON.parse(storedRecipes));
+      } catch (e) {
+        console.error("Failed to parse saved recipes:", e);
+      }
+    }
   }, []);
+
+  const handleSaveRecipe = () => {
+    if (!recipe) return;
+
+    const savedRecipe: SavedRecipe = {
+      ...recipe,
+      id: generateId(),
+      savedAt: new Date().toISOString(),
+    };
+
+    const updatedRecipes = [...savedRecipes, savedRecipe];
+    setSavedRecipes(updatedRecipes);
+    localStorage.setItem("savedRecipes", JSON.stringify(updatedRecipes));
+  };
+
+  const handleDeleteRecipe = (id: string) => {
+    const updatedRecipes = savedRecipes.filter((recipe) => recipe.id !== id);
+    setSavedRecipes(updatedRecipes);
+    localStorage.setItem("savedRecipes", JSON.stringify(updatedRecipes));
+  };
+
+  const isCurrentRecipeSaved = (): boolean => {
+    if (!recipe) return false;
+    return savedRecipes.some(
+      (saved) =>
+        saved.sourceUrl === recipe.sourceUrl && saved.title === recipe.title
+    );
+  };
 
   const handleExtractRecipe = async (youtubeUrl: string) => {
     setIsLoading(true);
@@ -74,7 +118,7 @@ function MainContent() {
   return (
     <main>
       <div className="min-h-screen bg-cream">
-        <div className="container mx-auto px-4 py-12 max-w-[40rem]">
+        <div className="container mx-auto px-4 py-8 max-w-[40rem]">
           <div className="mb-6">
             <div className="flex items-center justify-between">
               <h1 className="text-3xl font-semibold text-black mb-3">
@@ -84,8 +128,9 @@ function MainContent() {
               <div className="flex justify-end mb-4">
                 <button
                   onClick={() => setLocale(locale === "en" ? "ko" : "en")}
-                  className="px-2 py-1 text-sm bg-terracotta opacity-60 hover:opacity-100 text-white rounded-md transition-all flex items-center cursor-pointer"
+                  className="px-2 py-1 text-sm opacity-80 hover:opacity-100 text-terracotta transition-all flex items-center cursor-pointer"
                 >
+                  <RiGlobalLine className="mr-1" />
                   {locale === "en" ? "한국어로" : "To English"}
                 </button>
               </div>
@@ -108,46 +153,39 @@ function MainContent() {
             </div>
           </div>
 
-          {error && (
-            <motion.div
-              className="w-full mt-6 p-6 border-2 border-orange-300 rounded-xl shadow-md bg-orange-100 mb-8 text-orange-800 flex flex-col gap-2"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <p className="font-bold">{t("error.title")}</p>
-              <p>{error}</p>
-              {url && (
-                <p className="text-sm font-medium">
-                  {t("error.url")} {url}
-                </p>
-              )}
-            </motion.div>
-          )}
+          <div className="flex border-b-2 border-tan/30">
+            {Object.values(Tab).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setSelectedTab(tab)}
+                className={`relative px-4 py-1 rounded-t-lg cursor-pointer transition-all mb-[-2px] ${
+                  selectedTab === tab
+                    ? "text-terracotta font-medium border-2 border-tan/30 bg-tan/25 border-b-transparent"
+                    : "text-terracotta font-medium border-2 border-tan/30 bg-tan/25 border-b-transparent opacity-50"
+                } ${tab === Tab.SAVED ? "ml-[-2px]" : ""}`}
+              >
+                {t(`tabs.${tab}`)}
+              </button>
+            ))}
+          </div>
 
-          <ApiKeyInput initialKey={geminiApiKey} onSave={setGeminiApiKey} />
-
-          <UrlInputForm onSubmit={handleExtractRecipe} isLoading={isLoading} />
-
-          {recipe && !isLoading && (
-            <motion.div
-              className="w-full mt-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <RecipeDisplay recipe={recipe} />
-            </motion.div>
-          )}
-
-          {isLoading && (
-            <motion.div
-              className="my-12 flex flex-col items-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <LoadingSpinner />
-            </motion.div>
+          {selectedTab === "saved" ? (
+            <SavedRecipesPanel
+              savedRecipes={savedRecipes}
+              onRecipeDelete={handleDeleteRecipe}
+            />
+          ) : (
+            <ExtractRecipePanel
+              recipe={recipe}
+              error={error}
+              url={url}
+              isLoading={isLoading}
+              geminiApiKey={geminiApiKey}
+              onSaveRecipe={handleSaveRecipe}
+              onExtractRecipe={handleExtractRecipe}
+              onApiKeySave={setGeminiApiKey}
+              isRecipeSaved={isCurrentRecipeSaved()}
+            />
           )}
         </div>
       </div>
@@ -155,7 +193,6 @@ function MainContent() {
   );
 }
 
-// Main component that provides the locale context
 export default function Home() {
   return (
     <LocaleProvider>
