@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,100..900;1,100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -11,10 +11,10 @@
   --foreground: #171717;
 
   /* Color palette */
-  --color-cream: #F8EDE3;
-  --color-beige: #DFD3C3;
-  --color-tan: #D0B8A8;
-  --color-terracotta: #C5705D;
+  --color-cream: #f8ede3;
+  --color-beige: #dfd3c3;
+  --color-tan: #d0b8a8;
+  --color-terracotta: #c5705d;
 }
 
 @theme inline {
@@ -41,4 +41,5 @@ body {
   font-family: "Aleo", serif;
   font-optical-sizing: auto;
   font-style: normal;
+  overflow-y: scroll;
 }

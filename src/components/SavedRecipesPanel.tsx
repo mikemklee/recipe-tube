@@ -35,7 +35,7 @@ const SavedRecipesPanel: React.FC<SavedRecipesPanelProps> = ({
     <>
       {selectedRecipe ? (
         <>
-          <div className="mb-4">
+          <div className="my-4">
             <button
               onClick={handleBackToList}
               className="flex items-center gap-1 text-sm text-terracotta hover:text-terracotta/80 cursor-pointer"

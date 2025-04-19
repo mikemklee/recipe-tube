@@ -47,9 +47,9 @@ export const translations: Translations = {
   ko: {
     "app.title": "RecipeTube",
     "app.description.1":
-      "클릭 한번으로 유튜브 요리 영상에서 깔끔하게 정리된 레시피를 뽑아내세요!",
+      "클릭 한번으로 유튜브 요리 영상에서 깔끔한 레시피를 바로 만들어 드려요!",
     "app.description.2":
-      "레시피를 단계별로 명확하게 보여주는 영상에서 가장 잘 작동합니다.",
+      "요리 과정이 자세히 나온 영상에서 더 좋은 결과를 얻을 수 있어요.",
     "app.madeBy": "제작자",
     "error.title": "문제가 발생했습니다!",
     "error.url": "링크:",
