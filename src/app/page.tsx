@@ -6,8 +6,20 @@ import ExtractRecipePanel from "@/components/ExtractRecipePanel";
 import { MdBookmarks } from "react-icons/md";
 import { generateId } from "@/lib/utils";
 import { RiGlobalLine } from "react-icons/ri";
+import localFont from "next/font/local";
+import { Aleo } from "next/font/google";
 
 import { LocaleProvider, useLocale } from "@/context/LocaleContext";
+
+export const myFont = localFont({
+  src: "./NanumSquareNeo-Variable.woff2",
+  display: "swap",
+});
+
+export const aleoFont = Aleo({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 enum Tab {
   EXTRACT = "extract",
@@ -116,12 +128,14 @@ function MainContent() {
   };
 
   return (
-    <main>
+    <main className={locale === "ko" ? myFont.className : aleoFont.className}>
       <div className="min-h-screen bg-cream">
         <div className="container mx-auto px-4 py-8 max-w-[40rem]">
           <div className="mb-6">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-semibold text-black mb-3">
+              <h1
+                className={`text-2xl font-semibold text-black mb-3 ${aleoFont.className}`}
+              >
                 {t("app.title")}
                 <MdBookmarks className="inline-block text-terracotta ml-2 mb-1" />
               </h1>
