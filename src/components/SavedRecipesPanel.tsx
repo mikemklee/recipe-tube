@@ -19,10 +19,6 @@ const SavedRecipesPanel: React.FC<SavedRecipesPanelProps> = ({
     null
   );
 
-  if (savedRecipes.length === 0) {
-    return null;
-  }
-
   const handleRecipeSelect = (recipe: SavedRecipe) => {
     setSelectedRecipe(recipe);
   };

@@ -121,7 +121,7 @@ function MainContent() {
         <div className="container mx-auto px-4 py-8 max-w-[40rem]">
           <div className="mb-6">
             <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-semibold text-black mb-3">
+              <h1 className="text-2xl font-semibold text-black mb-3">
                 {t("app.title")}
                 <MdBookmarks className="inline-block text-terracotta ml-2 mb-1" />
               </h1>
@@ -135,17 +135,17 @@ function MainContent() {
                 </button>
               </div>
             </div>
-            <div className="text-sm text-gray-700 border-l-2 pl-2 border-tan italic mb-2 flex flex-col">
+            <div className="text-xs text-gray-700 border-l-2 pl-2 border-tan italic mb-2 flex flex-col">
               <span>{t("app.description.1")}</span>
               <span>{t("app.description.2")}</span>
 
-              <span className="text-sm mt-2">
+              <span className="mt-2">
                 {t("app.madeBy")}
                 <a
                   href="https://github.com/mikemklee"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm hover:underline pl-0.5 w-min text-terracotta"
+                  className="hover:underline pl-0.5 w-min text-terracotta"
                 >
                   @mikemklee
                 </a>

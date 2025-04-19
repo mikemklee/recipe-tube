@@ -19,7 +19,7 @@ const SavedRecipesList: React.FC<SavedRecipesListProps> = ({
 
   if (savedRecipes.length === 0) {
     return (
-      <div className="text-gray-500 text-center py-4">
+      <div className="text-gray-500 text-center py-4 text-sm">
         {t("savedRecipes.noRecipes")}
       </div>
     );
