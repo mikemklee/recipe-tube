@@ -51,16 +51,13 @@ const SavedRecipesPanel: React.FC<SavedRecipesPanelProps> = ({
           />
         </>
       ) : (
-        <>
-          <h1 className="font-bold mb-3 text-black text-lg">
-            {t("savedRecipes.title")}
-          </h1>
+        <div className="mt-6">
           <SavedRecipesList
             savedRecipes={savedRecipes}
             onRecipeSelect={handleRecipeSelect}
             onRecipeDelete={onRecipeDelete}
           />
-        </>
+        </div>
       )}
     </>
   );

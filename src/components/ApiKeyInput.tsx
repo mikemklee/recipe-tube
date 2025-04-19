@@ -78,7 +78,7 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
             </span>
           )}
         </h3>
-        <span className="text-gray-600 text-xl">
+        <span className="text-gray-600 text-xl mr-2">
           {isCollapsed ? <RiArrowDownSLine /> : <RiArrowUpSLine />}
         </span>
       </div>

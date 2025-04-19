@@ -41,6 +41,8 @@ export const translations: Translations = {
     "apiKey.clear": "Clear",
     "apiKey.securityNote":
       "Your API key is stored locally and never stored in our servers.",
+    "tabs.extract": "New recipe",
+    "tabs.saved": "Saved recipes",
   },
   ko: {
     "app.title": "RecipeTube",
@@ -82,5 +84,7 @@ export const translations: Translations = {
     "apiKey.clear": "삭제",
     "apiKey.securityNote":
       "API 키는 브라우저에만 저장되며 서버에 기록이 남지 않습니다.",
+    "tabs.extract": "새로운 레시피",
+    "tabs.saved": "저장된 레시피",
   },
 };

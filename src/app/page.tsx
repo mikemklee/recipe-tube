@@ -5,10 +5,14 @@ import SavedRecipesPanel from "@/components/SavedRecipesPanel";
 import ExtractRecipePanel from "@/components/ExtractRecipePanel";
 import { MdBookmarks } from "react-icons/md";
 import { generateId } from "@/lib/utils";
-import { FaWandMagicSparkles } from "react-icons/fa6";
 import { RiGlobalLine } from "react-icons/ri";
 
 import { LocaleProvider, useLocale } from "@/context/LocaleContext";
+
+enum Tab {
+  EXTRACT = "extract",
+  SAVED = "saved",
+}
 
 function MainContent() {
   const { locale, setLocale, t } = useLocale();
@@ -18,7 +22,8 @@ function MainContent() {
   const [url, setUrl] = useState<string>("");
   const [geminiApiKey, setGeminiApiKey] = useState<string | undefined>();
   const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>([]);
-  const [showSavedRecipes, setShowSavedRecipes] = useState<boolean>(false);
+
+  const [selectedTab, setSelectedTab] = useState<Tab>(Tab.EXTRACT);
 
   useEffect(() => {
     const storedKey = localStorage.getItem("geminiApiKey");
@@ -113,7 +118,7 @@ function MainContent() {
   return (
     <main>
       <div className="min-h-screen bg-cream">
-        <div className="container mx-auto px-4 py-12 max-w-[40rem]">
+        <div className="container mx-auto px-4 py-8 max-w-[40rem]">
           <div className="mb-6">
             <div className="flex items-center justify-between">
               <h1 className="text-3xl font-semibold text-black mb-3">
@@ -148,9 +153,23 @@ function MainContent() {
             </div>
           </div>
 
-          <hr className="border-t-2 border-tan/30 my-2" />
+          <div className="flex border-b-2 border-tan/30">
+            {Object.values(Tab).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setSelectedTab(tab)}
+                className={`relative px-4 py-1 rounded-t-lg cursor-pointer transition-all mb-[-2px] ${
+                  selectedTab === tab
+                    ? "text-terracotta font-medium border-2 border-tan/30 bg-tan/25 border-b-transparent"
+                    : "text-terracotta font-medium border-2 border-tan/30 bg-tan/25 border-b-transparent opacity-50"
+                } ${tab === Tab.SAVED ? "ml-[-2px]" : ""}`}
+              >
+                {t(`tabs.${tab}`)}
+              </button>
+            ))}
+          </div>
 
-          {showSavedRecipes ? (
+          {selectedTab === "saved" ? (
             <SavedRecipesPanel
               savedRecipes={savedRecipes}
               onRecipeDelete={handleDeleteRecipe}
@@ -168,23 +187,6 @@ function MainContent() {
               isRecipeSaved={isCurrentRecipeSaved()}
             />
           )}
-
-          <button
-            className="fixed bottom-6 right-6 bg-terracotta hover:bg-terracotta/90 text-white rounded-full shadow-lg flex items-center justify-center w-auto h-10 z-50 p-4 gap-2 text-sm cursor-pointer"
-            onClick={() => setShowSavedRecipes(!showSavedRecipes)}
-          >
-            {showSavedRecipes ? (
-              <>
-                <FaWandMagicSparkles />
-                <span>{t("savedRecipes.hide")}</span>
-              </>
-            ) : (
-              <>
-                <MdBookmarks />
-                <span>{t("savedRecipes.show")}</span>
-              </>
-            )}
-          </button>
         </div>
       </div>
     </main>
