@@ -11,12 +11,12 @@ import { Aleo } from "next/font/google";
 
 import { LocaleProvider, useLocale } from "@/context/LocaleContext";
 
-export const myFont = localFont({
+const myFont = localFont({
   src: "./NanumSquareNeo-Variable.woff2",
   display: "swap",
 });
 
-export const aleoFont = Aleo({
+const aleoFont = Aleo({
   subsets: ["latin"],
   display: "swap",
 });
