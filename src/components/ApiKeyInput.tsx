@@ -85,8 +85,9 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
 
       {!isCollapsed && (
         <div className="mt-4">
-          <p className="text-gray-600 text-sm mb-3">
-            {t("apiKey.description")}
+          <p className="text-gray-600 text-xs">{t("apiKey.description")}</p>
+          <p className="text-xs text-gray-600 my-1 mb-2">
+            {t("apiKey.securityNote")}
           </p>
 
           <div className="flex flex-col gap-3">
@@ -115,9 +116,6 @@ const ApiKeyInput: React.FC<ApiKeyInputProps> = ({
               )}
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-3">
-            {t("apiKey.securityNote")}
-          </p>
         </div>
       )}
     </div>

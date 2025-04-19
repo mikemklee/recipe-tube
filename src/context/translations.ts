@@ -34,7 +34,7 @@ export const translations: Translations = {
     "urlInput.processing": "Processing...",
     "apiKey.title": "Gemini API Key",
     "apiKey.description":
-      "Enter your Gemini API key to use the recipe extraction service.",
+      "Enter your Gemini API key to use the recipe extraction feature.",
     "apiKey.placeholder": "Enter your Gemini API key",
     "apiKey.save": "Save",
     "apiKey.saved": "Saved",
@@ -47,7 +47,7 @@ export const translations: Translations = {
   ko: {
     "app.title": "RecipeTube",
     "app.description.1":
-      "클릭 한번으로 유튜브 요리 영상에서 깔끔한 레시피를 바로 만들어 드려요!",
+      "클릭 한 번으로 유튜브 요리 영상에서 깔끔한 레시피를 바로 만들어 드려요!",
     "app.description.2":
       "요리 과정이 자세히 나온 영상에서 더 좋은 결과를 얻을 수 있어요.",
     "app.madeBy": "제작자",
@@ -72,12 +72,12 @@ export const translations: Translations = {
     "savedRecipes.delete": "레시피 삭제",
     "savedRecipes.backToList": "다른 저장된 레시피 보기",
     "urlInput.title": "레시피 추출",
-    "urlInput.placeholder": "유튜브 영상 URL을 여기에 붙여넣으세요",
+    "urlInput.placeholder": "유튜브 영상 URL을 여기에 붙여 넣어 주세요",
     "urlInput.button": "시작!",
     "urlInput.processing": "처리 중...",
     "apiKey.title": "Gemini API 키",
     "apiKey.description":
-      "레시피 추출 서비스를 사용하려면 Gemini API 키를 입력하세요.",
+      "레시피 추출 기능을 사용하려면 Gemini API 키를 입력해 주세요.",
     "apiKey.placeholder": "Gemini API 키 입력",
     "apiKey.save": "저장",
     "apiKey.saved": "저장됨",
